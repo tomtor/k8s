@@ -3,4 +3,4 @@ POD=$(kubectl get pods | grep postgres | cut -d' ' -f1)
 echo "POD: " $POD
 
 kubectl exec -it $POD -- su postgres -c "PGDATA=/var/lib/postgresql/data pg_ctl status"
-kubectl exec -it $(POD) -- su postgres -c "PGDATA=/var/lib/postgresql/data pg_ctl stop"
+kubectl exec -it $POD -- su postgres -c "PGDATA=/var/lib/postgresql/data pg_ctl stop"
