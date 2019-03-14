@@ -16,7 +16,7 @@
 echo never > /sys/kernel/mm/transparent_hugepage/enabled
 
 mkdir /mnt/postgres
-chown 70 /mnt/postgres
+chown 999 /mnt/postgres
 chmod 700 /mnt/postgres
 
 SWAP=/mnt/swapfile
