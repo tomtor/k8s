@@ -1,0 +1,33 @@
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+#iptables -P FORWARD ACCEPT
+
+echo never > /sys/kernel/mm/transparent_hugepage/enabled
+
+mkdir /mnt/postgres
+chown 70 /mnt/postgres
+chmod 700 /mnt/postgres
+
+SWAP=/mnt/swapfile
+if test ! -e $SWAP
+then
+	echo Make $SWAP
+	dd if=/dev/zero of=$SWAP bs=1M count=4096
+	chmod 600 $SWAP
+        mkswap $SWAPFILE	
+	swapon $SWAPFILE
+
+fi
+
+exit 0
