@@ -15,19 +15,26 @@
 
 echo never > /sys/kernel/mm/transparent_hugepage/enabled
 
-mkdir /mnt/postgres
-chown 999 /mnt/postgres
-chmod 700 /mnt/postgres
+SWAPFILE=/mnt/swapfile
 
-SWAP=/mnt/swapfile
-if test ! -e $SWAP
+if test ! -e $SWAPFILE
 then
-	echo Make $SWAP
-	dd if=/dev/zero of=$SWAP bs=1M count=4096
-	chmod 600 $SWAP
+	echo Make $SWAPFILE
+	dd if=/dev/zero of=$SWAPFILE bs=1M count=4096
+	chmod 600 $SWAPFILE
         mkswap $SWAPFILE	
 	swapon $SWAPFILE
 
+fi
+
+
+POSTGRESTMP=/mnt/postgres
+
+if test ! -e $POSTGRESTMP
+then
+	mkdir /mnt/postgres
+	chown 999 /mnt/postgres
+	chmod 700 /mnt/postgres
 fi
 
 exit 0
