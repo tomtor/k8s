@@ -18,12 +18,13 @@ spec:
           ports:
             - containerPort: 5432
           lifecycle:
-            postStart:
-              exec:
-                command: ["/bin/sh", "-c", "sleep 60; echo \"DROP TABLESPACE temp_ts; CREATE TABLESPACE temp_ts LOCATION '/mnt'; GRANT CREATE ON TABLESPACE temp_ts TO PUBLIC; SET temp_tablespaces TO 'temp_ts';\" | psql -U postgresadmin postgresdb"]
+                  # postStart:
+                  #   exec:
+                  #     command: ["/bin/sh", "-c", "sleep 60; echo \"DROP TABLESPACE temp_ts; CREATE TABLESPACE temp_ts LOCATION '/mnt'; GRANT CREATE ON TABLESPACE temp_ts TO PUBLIC; SET temp_tablespaces TO 'temp_ts';\" | psql -U postgresadmin postgresdb"]
             preStop:
               exec:
-                command: ["/bin/sh", "-c", "echo \"DROP TABLESPACE temp_ts;\" | psql -U postgresadmin postgresdb; PGDATA=/var/lib/postgresql/data /usr/lib/postgresql/11/bin/pg_ctl stop"]
+                # command: ["/bin/sh", "-c", "echo \"DROP TABLESPACE temp_ts;\" | psql -U postgresadmin postgresdb; PGDATA=/var/lib/postgresql/data /usr/lib/postgresql/11/bin/pg_ctl stop"]
+                command: ["/bin/sh", "-c", "PGDATA=/var/lib/postgresql/data /usr/lib/postgresql/11/bin/pg_ctl stop"]
           envFrom:
             - configMapRef:
                 name: postgres-config
