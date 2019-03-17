@@ -13,7 +13,7 @@ spec:
         - name: postgres
           # image: postgres:11.1
           # image: mdillon/postgis:latest
-          image: tomtor/postgis251_1e-1_fix12_tolerance
+          image: tomtor/postgis:postgis251_1e-1_fix12_tolerance
           imagePullPolicy: "IfNotPresent"
           ports:
             - containerPort: 5432
