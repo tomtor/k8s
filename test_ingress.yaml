@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: test-ingress
+spec:
+   tls:
+   - hosts:
+     - tom-kad-ssh.westeurope.cloudapp.azure.com
+     secretName: testsecret-tls
+   rules:
+   - host: ssh-trampoline.r250sbyv0n1ele3qfvezxaf30d.ax.internal.cloudapp.net
+     http:
+       paths:
+       - path: /
+         backend:
+           serviceName: hello-redis2
+           servicePort: 80
+   - host: tom-kad-ssh.westeurope.cloudapp.azure.com
+     http:
+       paths:
+       - path: /
+         backend:
+           serviceName: hello-redis2
+           servicePort: 80
