@@ -1,5 +1,7 @@
 #!/bin/sh
 
+PATH=/snap/bin:$PATH
+
 microk8s.disable ingress
 
 sudo certbot renew
