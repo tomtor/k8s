@@ -12,7 +12,7 @@ spec:
   accessModes:
     - ReadWriteMany
   hostPath:
-    path: "/home/tom/data/pg11.1"
+    path: "/tank/pg11/pg11.2"
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -27,33 +27,33 @@ spec:
   resources:
     requests:
       storage: 5Gi
----
-kind: PersistentVolume
-apiVersion: v1
-metadata:
-  name: postgrestemp-pv-volume
-  labels:
-    type: local
-    app: postgres
-spec:
-  storageClassName: manual
-  capacity:
-    storage: 5Gi
-  accessModes:
-    - ReadWriteMany
-  hostPath:
-    path: "/mnt/postgres"
----
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: postgrestemp-pv-claim
-  labels:
-    app: postgres
-spec:
-  storageClassName: manual
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 5Gi
+#---
+#kind: PersistentVolume
+#apiVersion: v1
+#metadata:
+#  name: postgrestemp-pv-volume
+#  labels:
+#    type: local
+#    app: postgres
+#spec:
+#  storageClassName: manual
+#  capacity:
+#    storage: 5Gi
+#  accessModes:
+#    - ReadWriteMany
+#  hostPath:
+#    path: "/mnt/postgres"
+#---
+#kind: PersistentVolumeClaim
+#apiVersion: v1
+#metadata:
+#  name: postgrestemp-pv-claim
+#  labels:
+#    app: postgres
+#spec:
+#  storageClassName: manual
+#  accessModes:
+#    - ReadWriteMany
+#  resources:
+#    requests:
+#      storage: 5Gi
