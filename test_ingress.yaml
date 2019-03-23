@@ -5,20 +5,14 @@ metadata:
 spec:
    tls:
    - hosts:
-     - tom-kad-ssh.westeurope.cloudapp.azure.com
+     - tom-kad-k8s.westeurope.cloudapp.azure.com
      secretName: testsecret-tls
    rules:
-   - host: ssh-trampoline.r250sbyv0n1ele3qfvezxaf30d.ax.internal.cloudapp.net
+   - host: tom-kad-k8s.westeurope.cloudapp.azure.com
+     host: k8s.v7f.eu
      http:
        paths:
        - path: /
          backend:
-           serviceName: hello-redis2
-           servicePort: 80
-   - host: tom-kad-ssh.westeurope.cloudapp.azure.com
-     http:
-       paths:
-       - path: /
-         backend:
-           serviceName: hello-redis2
+           serviceName: pythonapp
            servicePort: 80
