@@ -1,0 +1,8 @@
+configmap: |-
+  # maxmemory-policy volatile-lru
+  appendonly yes
+  appendfsync everysec
+  no-appendfsync-on-rewrite no
+  save 900 1
+  save 300 10
+  save 60 10000
