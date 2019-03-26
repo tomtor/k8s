@@ -1,6 +1,8 @@
 #!/bin/sh
 
-echo "create table hartbeat(t timestamp);" | psql -h localhost -p 30258 -U tom tom
+psql -h localhost -p 30258 -U tom tom << EOF
+  create table hartbeat(id serial primary key, t timestamptz);
+EOF
 
 while :
 do
