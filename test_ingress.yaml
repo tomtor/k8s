@@ -6,13 +6,21 @@ spec:
    tls:
    - hosts:
      - tom-kad-k8s.westeurope.cloudapp.azure.com
+     - k8s.v7f.eu
+     - pgadmin.v7f.eu
      secretName: testsecret-tls
    rules:
-   - host: tom-kad-k8s.westeurope.cloudapp.azure.com
-     host: k8s.v7f.eu
+   - host: k8s.v7f.eu
      http:
        paths:
        - path: /
          backend:
            serviceName: pythonapp
+           servicePort: 80
+   - host: pgadmin.v7f.eu
+     http:
+       paths:
+       - path: /
+         backend:
+           serviceName: pgadmin4
            servicePort: 80
