@@ -1,6 +1,6 @@
 HOSTNAME=tom-kad-k8s.westeurope.cloudapp.azure.com
 
-sudo certbot certonly --standalone -d $HOSTNAME -d k8s.v7f.eu
+sudo certbot certonly --standalone -d $HOSTNAME -d k8s.v7f.eu -d pgadmin.v7f.eu
 
 sudo cp /etc/letsencrypt/live/$HOSTNAME/fullchain.pem /tmp
 sudo cp /etc/letsencrypt/live/$HOSTNAME/privkey.pem /tmp
