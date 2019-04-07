@@ -2,6 +2,9 @@
 
 HOSTNAME=tom-kad-k8s.westeurope.cloudapp.azure.com
 
+PGDIR=/data/pg11/pg11.2
+PGOWNER=70
+
 PATH=/snap/bin:$PATH
 
 CRDIR=/tmp/cert_renew_$$
@@ -17,3 +20,7 @@ sudo chown $USER $CRDIR/*.pem
 kubectl create secret tls testsecret-tls --key $CRDIR/privkey.pem --cert $CRDIR/fullchain.pem --dry-run -o yaml | kubectl apply -f -
 
 rm -rf $CRDIR
+
+sudo cp /etc/letsencrypt/live/$HOSTNAME/fullchain.pem $PGDIR/server.crt
+sudo cp /etc/letsencrypt/live/$HOSTNAME/privkey.pem $PGDIR/server.key
+sudo chown $PGOWNER.$PGOWNER $PGDIR/server.key
