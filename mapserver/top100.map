@@ -1,0 +1,47 @@
+# The annotated map file (sort of)
+# Created by Pericles S. Nacionales for the MapServer tutorial
+# 20050408
+#
+# MapServer map file uses the pound sign (#) to denote the start of a line
+# comment--each line that needs to be commented has to be prepended with a "#".
+#
+# Map files begin with MAP keyword to signify the start of the map object.
+# Well, the entire map file is THE map object.  Enclosed between MAP and END
+# at the very bottom of this map file, are keyword/value pairs and other
+# objects.
+MAP
+PROJECTION
+   "init=epsg:4326"
+END
+WEB
+  METADATA
+    "wms_title" "Top 100"
+    "wms_onlineresource" "https://mapserver.v7f.eu/mapserver/?map=top100.map"
+    "wms_enable_request" "*"
+    "wms_srs" "EPSG:4326"
+    "wms_feature_info_mime_type" "text/html"
+    "wms_format" "image/png"
+  END
+END
+  #IMAGETYPE      PNG24
+  EXTENT 0 45 10 55
+
+  SIZE           800 600
+
+  LAYER
+    PROJECTION
+      "init=epsg:28992"
+    END
+    NAME         top100
+    #DATA         "top100/TOP100raster-01-2018.tif"
+    STATUS       ON
+    TYPE         RASTER
+    TILEINDEX	"top100.shp"
+    TILEITEM	"Location"
+    #PROCESSING   "BANDS=1,2,3"
+    #PROCESSING "SCALE=AUTO"
+    #OFFSITE      255 0 0
+
+  END
+
+END # All map files must come to an end just as all other things must come to...
