@@ -32,6 +32,7 @@ END
     PROJECTION
       "init=epsg:28992"
     END
+    MAXSCALEDENOM 200000
     NAME         top25
     STATUS       ON
     TYPE         RASTER
@@ -41,4 +42,16 @@ END
     #PROCESSING  "RESAMPLE=BILINEAR"
   END
 
-END # All map files must come to an end just as all other things must come to...
+  LAYER
+    PROJECTION
+      "init=epsg:28992"
+    END
+    MINSCALEDENOM 200000
+    NAME         top25-32
+    STATUS       ON
+    TYPE         RASTER
+    DATA         "top25-32.tif"
+    PROCESSING  "RESAMPLE=AVERAGE"
+  END
+
+END
