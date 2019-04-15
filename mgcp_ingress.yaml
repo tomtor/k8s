@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: mgcp-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: mgcp
+    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required - ok"
+spec:
+   tls:
+   - hosts:
+     - mapserver.v7f.eu
+     secretName: testsecret-tls
+   rules:
+   - host: mapserver.v7f.eu
+     http:
+       paths:
+       - path: /
+         backend:
+           serviceName: mapserver
+           servicePort: 80
