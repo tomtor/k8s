@@ -3,7 +3,7 @@
 for i in TOP*tif
 do
   echo $i
-  pct2rgb.py $i rgb.$i.tif
+  pct2rgb.py $i rgb.$i
 done
 
 gdal_merge.py -of gtiff -co COMPRESS=JPEG -co PHOTOMETRIC=YCBCR -co TILED=YES -o top100.tif rgb*tif
