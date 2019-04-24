@@ -18,6 +18,7 @@ sudo sh -c "umask 077; cp /etc/letsencrypt/live/$HOSTNAME/privkey.pem $CRDIR"
 sudo chown $USER $CRDIR/*.pem
 
 kubectl create secret tls testsecret-tls --key $CRDIR/privkey.pem --cert $CRDIR/fullchain.pem --dry-run -o yaml | kubectl apply -f -
+kubectl --namespace=kube-system create secret tls testsecret-tls --key $CRDIR/privkey.pem --cert $CRDIR/fullchain.pem --dry-run -o yaml | kubectl apply -f -
 
 rm -rf $CRDIR
 
