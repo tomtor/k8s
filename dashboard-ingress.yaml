@@ -1,0 +1,42 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/auth-url: "https://$host/oauth2/auth"
+    nginx.ingress.kubernetes.io/auth-signin: "https://$host/oauth2/start?rd=$escaped_request_uri"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+  name: external-auth-oauth2
+  namespace: kube-system
+spec:
+  rules:
+  - host: k8smon.v7f.eu
+    http:
+      paths:
+      - backend:
+          serviceName: kubernetes-dashboard
+          # servicePort: 80
+          servicePort: 443
+          # servicePort: 8443
+        path: /
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: oauth2-proxy
+  namespace: kube-system
+spec:
+  rules:
+  - host: k8smon.v7f.eu
+    http:
+      paths:
+      - backend:
+          serviceName: oauth2-proxy
+          servicePort: 4180
+        path: /oauth2
+  tls:
+  - hosts:
+    - tom-kad-k8s.westeurope.cloudapp.azure.com
+    - k8smon.v7f.eu
+    secretName: testsecret-tls
