@@ -1,4 +1,4 @@
-#!/bin/sh
+#! /bin/sh
 
 HOSTNAME=tom-kad-k8s.westeurope.cloudapp.azure.com
 
