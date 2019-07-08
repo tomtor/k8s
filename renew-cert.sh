@@ -11,7 +11,7 @@ CRDIR=/tmp/cert_renew_$$
 
 mkdir $CRDIR
 
-sudo certbot renew --pre-hook "microk8s.disable ingress" --post-hook "microk8s.enable ingress"
+sudo certbot renew --pre-hook "microk8s.disable ingress; sleep 5" --post-hook "microk8s.enable ingress"
 
 sudo cp /etc/letsencrypt/live/$HOSTNAME/fullchain.pem $CRDIR
 sudo sh -c "umask 077; cp /etc/letsencrypt/live/$HOSTNAME/privkey.pem $CRDIR"
