@@ -13,7 +13,9 @@ spec:
         - name: postgres
           # image: postgres:11.1
           # image: mdillon/postgis:latest
-          image: tomtor/postgis:postgis251_1e-1_fix12_tolerance
+          # image: tomtor/postgis:postgis251_1e-1_fix12_tolerance
+          # image: tomtor/postgis:postgis251_11.3_fix
+          image: tomtor/postgis:postgis300_12.beta_fix
           imagePullPolicy: "IfNotPresent"
           ports:
             - containerPort: 5432
@@ -34,4 +36,5 @@ spec:
       volumes:
         - name: postgredb
           persistentVolumeClaim:
-            claimName: postgres-pv-claim
+            #claimName: postgres-pv-claim
+            claimName: postgres12-pv-claim

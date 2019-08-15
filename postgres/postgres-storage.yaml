@@ -4,7 +4,7 @@ metadata:
   name: postgres-pv-volume
   labels:
     type: local
-    app: postgres
+    app: postgreszfs
 spec:
   storageClassName: manual
   capacity:
@@ -14,10 +14,56 @@ spec:
   hostPath:
     path: "/tank/pg11/pg11.2"
 ---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: postgres-pvbt-volume
+  labels:
+    type: local
+    app: postgres
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/data/pg11/pg11.2"
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: postgres-pvbt12-volume
+  labels:
+    type: local
+    app: postgres
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/data/pg/pg12.0beta"
+---
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: postgres-pv-claim
+  labels:
+    app: postgres
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: postgres12-pv-claim
   labels:
     app: postgres
 spec:
