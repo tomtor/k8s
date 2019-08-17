@@ -1,1 +1,5 @@
-pg_dumpall -g -h localhost -p 31082 -U postgresadmin > roles.sql
+POD=$(kubectl get pods | grep postgres | cut -d' ' -f1)
+
+echo "POD: " $POD
+
+kubectl exec $POD -- pg_dumpall --roles-only -U postgresadmin > roles.sql
