@@ -9,18 +9,18 @@ def get_delays():
   try:
     connection = psycopg2.connect(user = "tom",
                                   password = os.getenv("PGPASS"),
-                                  host = os.getenv("PGHOST", "localhost"),
+                                  host = os.getenv("PGHOST", "localhost"), sslmode='require',
                                   port = os.getenv("PGPORT", "5432"), database = "tom")
     cursor = connection.cursor()
     cursor.execute("select t, d from (select t, t - lag(t) over() as d \
         from hartbeat) as ss where \
         extract(minute from d) * 60 + extract(seconds from d) > 65 \
-        oder by t desc limit 10;")
+        order by t desc limit 10;")
     d = cursor.fetchall()
     if d:
         result = ""
         for r in d:
-            result += (str(r[0]) + ' ' + str(r[1]) + '<br/>')
+            result += (str(r[0]) + ' ' + str(r[1]) + '<br/>\n')
     else:
         result = "No delays"
     return result
@@ -57,3 +57,4 @@ def hello():
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=my_port)
+    #print(get_delays())
