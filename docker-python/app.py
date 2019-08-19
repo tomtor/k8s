@@ -7,10 +7,10 @@ import psycopg2
 
 def get_delays():
   try:
-    connection = psycopg2.connect(user = "tom",
-                                  password = os.getenv("PGPASS"),
-                                  host = os.getenv("PGHOST", "localhost"), sslmode='require',
-                                  port = os.getenv("PGPORT", "5432"), database = "tom")
+    connection = psycopg2.connect(user="tom",
+                                  password=os.getenv("PGPASS"),
+                                  host=os.getenv("PGHOST", "localhost"), sslmode='require',
+                                  port=os.getenv("PGPORT", "5432"), database="tom")
     cursor = connection.cursor()
     cursor.execute("select t, d from (select t, t - lag(t) over() as d \
         from hartbeat) as ss where \
