@@ -13,7 +13,9 @@ def get_delays():
                                   port = os.getenv("PGPORT", "5432"), database = "tom")
     cursor = connection.cursor()
     cursor.execute("select t, d from (select t, t - lag(t) over() as d \
-        from hartbeat) as ss where extract(seconds from d) > 61;")
+        from hartbeat) as ss where \
+        extract(minute from d) * 60 + extract(seconds from d) > 65 \
+        oder by t desc limit 10;")
     d = cursor.fetchall()
     if d:
         result = ""
