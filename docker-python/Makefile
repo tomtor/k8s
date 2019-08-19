@@ -1,16 +1,22 @@
+VERSION=0.5
+
 run:
-	NAME=Tom PORT=8888 REDIS=10.152.183.191 python3 app.py
+	NAME=Tom PORT=8888 REDIS=10.152.183.113 PGPORT=30258 python3 app.py
 
 test:
 	curl localhost:8888
 
 build:
-	docker build --tag=tomtor/test-k8s:hello-0.2 .
+	docker build --tag=tomtor/test-k8s:hello-$(VERSION) .
+
+push:
+	docker push tomtor/test-k8s:hello-$(VERSION)
 
 deploy:
-	kubectl create deployment hello-redis --image=tomtor/test-k8s:hello-0.2
-	kubectl expose deployment hello-redis --port 80
+	kubectl apply -f pythonapp-deploy.yaml
+	# kubectl create deployment hello-redis --image=tomtor/test-k8s:hello-$(VERSION)
+	# kubectl expose deployment hello-redis --port 80
 
-redeploy:
-	kubectl set image deployment/hello-redis hello-redis=tomtor/test-k8s:hello-0.x
+#redeploy:
+	# kubectl set image deployment/pythonapp pythonapp=tomtor/test-k8s:hello-$(VERSION)
 
