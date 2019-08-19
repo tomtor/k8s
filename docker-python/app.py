@@ -1,21 +1,39 @@
 from flask import Flask
 from redis import Redis, RedisError
 import os
+import sys
 import socket
 
 import psycopg2
 
-def get_delays():
-  try:
+connection = None
+cursor = None
+
+def db_connect():
+    global connection, cursor
+    print("Connecting", file=sys.stderr)
     connection = psycopg2.connect(user="tom",
-                                  password=os.getenv("PGPASS"),
-                                  host=os.getenv("PGHOST", "localhost"), sslmode='require',
-                                  port=os.getenv("PGPORT", "5432"), database="tom")
+                              password=os.getenv("PGPASS"),
+                              host=os.getenv("PGHOST", "localhost"),
+                              sslmode='require',
+                              port=os.getenv("PGPORT", "5432"),
+                              database="tom")
     cursor = connection.cursor()
+
+def query():
+    global cursor
     cursor.execute("select t, d from (select t, t - lag(t) over() as d \
         from hartbeat) as ss where \
         extract(hour from d) * 3600 + extract(minute from d) * 60 + extract(seconds from d) > 65 \
         order by t desc limit 10;")
+
+def get_delays():
+    try:
+        query()
+    except:
+        db_connect()
+        query()
+
     d = cursor.fetchall()
     if d:
         result = ""
@@ -24,10 +42,6 @@ def get_delays():
     else:
         result = "No delays"
     return result
-  finally:
-    if connection:
-        cursor.close()
-        connection.close()
 
 
 redis_host = os.getenv("REDIS", "redis-master")
