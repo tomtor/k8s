@@ -11,16 +11,18 @@ import psycopg2
 connection = None
 cursor = None
 
+
 def db_connect():
     global connection, cursor
     print("Connecting", file=sys.stderr)
     connection = psycopg2.connect(user="tom",
-                              password=os.getenv("PGPASS"),
-                              host=os.getenv("PGHOST", "localhost"),
-                              sslmode='require',
-                              port=os.getenv("PGPORT", "5432"),
-                              database="tom")
+                                  password=os.getenv("PGPASS"),
+                                  host=os.getenv("PGHOST", "localhost"),
+                                  sslmode='require',
+                                  port=os.getenv("PGPORT", "5432"),
+                                  database="tom")
     cursor = connection.cursor()
+
 
 def query():
     global cursor
@@ -28,6 +30,7 @@ def query():
         from hartbeat) as ss where \
         extract(hour from d) * 3600 + extract(minute from d) * 60 + extract(seconds from d) > 65 \
         order by t desc limit 10;")
+
 
 def get_delays():
     try:
@@ -52,9 +55,11 @@ redis_password = os.getenv("REDIS_PASSWORD")
 my_port = int(os.getenv("PORT", "80"))
 
 # Connect to Redis
-redis = Redis(host=redis_host, password=redis_password, db=0, socket_connect_timeout=2, socket_timeout=2)
+redis = Redis(host=redis_host, password=redis_password, db=0,
+              socket_connect_timeout=2, socket_timeout=2)
 
 app = Flask(__name__)
+
 
 @app.route("/")
 def hello():
@@ -71,7 +76,8 @@ def hello():
            + "</p>"
     return html.format(name=os.getenv("NAME", "world"), hostname=socket.gethostname(), visits=visits)
 
+
 if __name__ == "__main__":
     serve(app, host='0.0.0.0', port=my_port)
     #app.run(host='0.0.0.0', port=my_port)
-    #print(get_delays())
+    # print(get_delays())
