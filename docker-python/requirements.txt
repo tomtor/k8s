@@ -1,4 +1,5 @@
 Flask
 Redis
 psycopg2-binary
+waitress
 

@@ -1,5 +1,7 @@
 from flask import Flask
 from redis import Redis, RedisError
+from waitress import serve
+
 import os
 import sys
 import socket
@@ -70,5 +72,6 @@ def hello():
     return html.format(name=os.getenv("NAME", "world"), hostname=socket.gethostname(), visits=visits)
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=my_port)
+    serve(app, host='0.0.0.0', port=my_port)
+    #app.run(host='0.0.0.0', port=my_port)
     #print(get_delays())
