@@ -7,36 +7,35 @@ import sys
 import socket
 
 import psycopg2
+from psycopg2 import pool
 
-connection = None
-
+threaded_postgreSQL_pool = None
 
 def db_connect():
-    global connection, cursor
+    global threaded_postgreSQL_pool
     print("Connecting", file=sys.stderr)
-    connection = psycopg2.connect(user="tom",
+    threaded_postgreSQL_pool = psycopg2.pool.ThreadedConnectionPool(5, 20,
+                                  user="tom",
                                   password=os.getenv("PGPASS"),
                                   host=os.getenv("PGHOST", "localhost"),
                                   sslmode='require',
                                   port=os.getenv("PGPORT", "5432"),
                                   database="tom")
 
+db_connect()
 
 def query():
+    connection  = threaded_postgreSQL_pool.getconn()
     cursor = connection.cursor()
     cursor.execute("select t, d from (select t, t - lag(t) over() as d \
         from hartbeat) as ss where \
         extract(hour from d) * 3600 + extract(minute from d) * 60 + extract(seconds from d) > 65 \
         order by t desc limit 10;")
-    return cursor
+    return connection, cursor
 
 
 def get_delays():
-    try:
-        cursor = query()
-    except:
-        db_connect()
-        cursor = query()
+    connection, cursor = query()
 
     d = cursor.fetchall()
     if d:
@@ -46,6 +45,7 @@ def get_delays():
     else:
         result = "No delays"
     cursor.close()
+    threaded_postgreSQL_pool.putconn(connection)
     return result
 
 
