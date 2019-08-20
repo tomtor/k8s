@@ -1,4 +1,4 @@
-VERSION=0.5
+VERSION=0.15
 
 run:
 	NAME=Tom PORT=8888 REDIS=10.152.183.113 PGPORT=30258 python3 app.py
@@ -14,9 +14,3 @@ push:
 
 deploy:
 	kubectl apply -f pythonapp-deploy.yaml
-	# kubectl create deployment hello-redis --image=tomtor/test-k8s:hello-$(VERSION)
-	# kubectl expose deployment hello-redis --port 80
-
-#redeploy:
-	# kubectl set image deployment/pythonapp pythonapp=tomtor/test-k8s:hello-$(VERSION)
-

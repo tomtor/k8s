@@ -13,6 +13,8 @@ threaded_postgreSQL_pool = None
 
 def db_connect():
     global threaded_postgreSQL_pool
+    if threaded_postgreSQL_pool:
+        threaded_postgreSQL_pool.closeall()
     print("Connecting", file=sys.stderr)
     threaded_postgreSQL_pool = psycopg2.pool.ThreadedConnectionPool(5, 20,
                                   user="tom",
@@ -35,7 +37,11 @@ def query():
 
 
 def get_delays():
-    connection, cursor = query()
+    try:
+        connection, cursor = query()
+    except:
+        db_connect()
+        connection, cursor = query()
 
     d = cursor.fetchall()
     if d:
