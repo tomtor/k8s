@@ -21,11 +21,11 @@ def db_connect():
                                   sslmode='require',
                                   port=os.getenv("PGPORT", "5432"),
                                   database="tom")
-    cursor = connection.cursor()
 
 
 def query():
     global cursor
+    cursor = connection.cursor()
     cursor.execute("select t, d from (select t, t - lag(t) over() as d \
         from hartbeat) as ss where \
         extract(hour from d) * 3600 + extract(minute from d) * 60 + extract(seconds from d) > 65 \
@@ -46,6 +46,7 @@ def get_delays():
             result += (str(r[0]) + ' ' + str(r[1]) + '<br/>\n')
     else:
         result = "No delays"
+    cursor.close()
     return result
 
 
