@@ -51,6 +51,7 @@ def get_delays():
     else:
         result = "No delays"
     cursor.close()
+    connection.commit()
     threaded_postgreSQL_pool.putconn(connection)
     return result
 
