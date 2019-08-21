@@ -14,7 +14,7 @@ RUN pip install --trusted-host pypi.python.org -r requirements.txt
 EXPOSE 80
 
 # Define environment variable
-ENV NAME "K8S Worlds?"
+ENV NAME "K8S Python / Redis / PostgreSQL"
 
 # Run app.py when the container launches
-CMD ["python", "app.py"]
+CMD ["python", "-u", "app.py"]
