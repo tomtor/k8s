@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, send_from_directory
 from redis import Redis, RedisError
 from waitress import serve
 
@@ -65,8 +65,12 @@ my_port = int(os.getenv("PORT", "80"))
 redis = Redis(host=redis_host, password=redis_password, db=0,
               socket_connect_timeout=2, socket_timeout=2)
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path="/", static_folder='/data/public')
 
+@app.route('/public/<path:path>')
+def send_js(path):
+    print(path) # , app.static_url_path, app.static_folder)
+    return send_from_directory(app.static_folder, path)
 
 @app.route("/")
 def hello():
