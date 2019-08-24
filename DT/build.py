@@ -74,7 +74,7 @@ def build_gml_main():
     cursor = connection.cursor()
     cursor.execute(
         "select identificatie, geovlak, \"roof-0.50\" as roof50 \
-        from \"3dbag\".pand3d where gemeentecode = '" + gemeentecode + "' limit 10")
+        from \"3dbag\".pand3d where gemeentecode = '" + gemeentecode + "'")
 
     # Add buildings
     cityModel, point_max, point_min = iteration_buildings(
@@ -87,7 +87,7 @@ def build_gml_main():
 
     # pretty print
     pretty = etree.tostring(cityModel, pretty_print=True)
-    print(pretty)
+    # print(pretty)
 
     # Save File
     #et = etree.ElementTree(cityModel)
@@ -207,50 +207,6 @@ def iteration_buildings(cityModel, cursor, ns_core, ns_bldg, ns_gen, ns_gml, ns_
     return cityModel, point_max, point_min
 
 
-def building_inits(content, shp_layer):
-    inits = {}
-    for i, field in zip(range(len(shp_layer.fields) - 1), shp_layer.fields[1:]):
-        # print field[0]
-        # print content[i]
-        if field[0] == 'gml_id':
-            inits['gml_id'] = content[i]
-        elif field[0] == 'Stadtteil':
-            inits['stadtteil'] = content[i]
-        elif field[0] == 'anzahlDerO':
-            inits['Anz_O'] = content[i]
-        elif field[0] == 'anzahlDerU':
-            inits['Anz_U'] = content[i]
-        elif field[0] == 'dachform':
-            inits['dachform'] = content[i]
-        elif field[0] == 'grundflaec':
-            inits['grundflaeche'] = content[i]
-        elif field[0] == 'bauweise':
-            inits['bauweise'] = content[i]
-        elif field[0] == 'anlass':
-            inits['anlass'] = content[i]
-        elif field[0] == 'Bezirk':
-            inits['bezirk'] = content[i]
-        elif field[0] == 'baujahr':
-            inits['baujahr'] = content[i]
-        elif field[0] == 'gebaeudefu':
-            inits['funktion'] = content[i]
-        elif field[0] == 'dachart':
-            inits['dachart'] = content[i]
-
-    # needed roof height for the 3d polygon
-    # simple and mostly wrong calculation should be changed by user
-    if int(inits['Anz_O']):
-        inits['dachhoehe'] = (int(inits['Anz_O']) + 1) * 2.53
-    else:
-        inits['dachhoehe'] = 3.113
-    return inits
-
-
-# def read_shape():
-#     shp_read = shapefile.Reader('/yourPath/ALKIS 2017-01/Harburg_corp')
-#     return shp_read
-
-
 def polygon_calculation(inits, points_2D):
 
     anz_polygone = len(points_2D)+2
@@ -269,7 +225,7 @@ def polygon_calculation(inits, points_2D):
 
         polygon.append(surface)
 
-        print(point_A, point_B)
+        # print(point_A, point_B)
 
     # add roof, add ground
     roof = []
