@@ -1,3 +1,33 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: pythonapp-volume
+  labels:
+    type: local
+    app: pythonapp
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/data/pythonapp"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pythonapp-pv-claim
+  labels:
+    app: pythonapp
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -11,13 +41,20 @@ spec:
     spec:
       containers:
         - name: pythonapp
-          image: tomtor/test-k8s:hello-0.17
+          image: tomtor/test-k8s:hello-0.18
           # imagePullPolicy: "Always"
           ports:
             - containerPort: 80
           envFrom:
             - configMapRef:
                 name: pythonapp-config
+          volumeMounts:
+            - mountPath: /data
+              name: pythonapp
+      volumes:
+        - name: pythonapp
+          persistentVolumeClaim:
+            claimName: pythonapp-pv-claim
 ---
 apiVersion: v1
 kind: Service
