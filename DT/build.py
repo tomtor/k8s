@@ -3,7 +3,9 @@
 # 
 # tvijlbrief@gmail.com
 
-gemeentecode = '0308'
+# gemeentecode = '0034' # almere
+# gemeentecode = '0981' # vaals
+gemeentecode = '0308' # baarn
 
 import os
 import psycopg2
@@ -56,9 +58,9 @@ def build_gml_main():
     cityModel = etree.Element("{%s}CityModel" % ns_core, nsmap=nsmap)
     # Add branch
     description = etree.SubElement(cityModel, "{%s}description" % ns_gml)
-    description.text = "Created by me"
+    description.text = "Demo data from http://3dbag.bk.tudelft.nl/"
     name = etree.SubElement(cityModel, "{%s}name" % ns_gml)
-    name.text = "LoD_Bannane"
+    name.text = "LoD_1"
     # Add branch
     bounded = etree.SubElement(cityModel, "{%s}boundedBy" % ns_gml)
     # Add branch to a branch
@@ -72,11 +74,11 @@ def build_gml_main():
                           ns_gml, srsDimension="3")
     ub.text = ''
 
-    # Read Shapefile
-    #shp_layer = read_shape()
     cursor = connection.cursor()
     cursor.execute(
-        "select identificatie, geovlak, \"roof-0.50\" as roof50 \
+        "select identificatie, geovlak, \
+            \"roof-0.50\" as roof50, \
+            \"ground-0.50\" as ground50 \
         from \"3dbag\".pand3d where height_valid and gemeentecode = '" + gemeentecode + "'")
 
     # Add buildings
@@ -89,7 +91,7 @@ def build_gml_main():
         str(point_max[1]) + ' ' + str(point_max[2])
 
     # pretty print
-    pretty = etree.tostring(cityModel, pretty_print=True)
+    pretty = etree.tostring(cityModel, pretty_print=False)
     # print(pretty)
 
     # Save File
@@ -106,18 +108,22 @@ def iteration_buildings(cityModel, cursor, ns_core, ns_bldg, ns_gen, ns_gml, ns_
     point_min = None
     # upper corner
     point_max = None
+    count = 0
 
     # iteration
-    for i_build in cursor.fetchall():  # range(building_count):
+    for i_build in cursor.fetchall():
         r = reg(cursor, i_build)
-        print(r.identificatie)
+        print(r.identificatie, r.ground50, r.roof50)
+        if not r.ground50:
+            # r.ground50 = 0.0
+            continue
+        count += 1
         cityObject = etree.SubElement(
             cityModel, "{%s}cityObjectMember" % ns_core)
 
         # building shape area
         points_2D = wkb.loads(r.geovlak, hex=True).exterior.coords
         # print(points_2D[0])
-
 
         # for Citygml the lower and upper limit of all buildings are needed
         point_min, point_max = find_lower_upper_corner(
@@ -143,7 +149,7 @@ def iteration_buildings(cityModel, cursor, ns_core, ns_bldg, ns_gen, ns_gml, ns_
 
         measuredHeight = etree.SubElement(
             bldg, "{%s}measuredHeight" % ns_bldg, uom="urn:adv:uom:m")
-        measuredHeight.text = str(r.roof50)
+        measuredHeight.text = str(r.roof50 - r.ground50)
 
         # Add the 3d polygon
         lod1Solid = etree.SubElement(bldg, "{%s}lod1Solid" % ns_bldg)
@@ -167,7 +173,7 @@ def iteration_buildings(cityModel, cursor, ns_core, ns_bldg, ns_gen, ns_gml, ns_
             # print etree.tostring(cityModel, pretty_print=True)
         # print etree.tostring(cityModel, pretty_print=True)
 
-        print('done')
+        print('done: ' + str(count) + ' objects')
 
     # print etree.tostring(cityModel, pretty_print=True)
     return cityModel, point_max, point_min
@@ -177,9 +183,10 @@ def polygon_calculation(inits, points_2D):
 
     anz_polygone = len(points_2D)+2
     polygon = []
-    grundhoehe = 0
+    grundhoehe = inits.ground50
     # extimated roof heigth
-    dachhoehe = inits.roof50 + grundhoehe
+    dachhoehe = inits.roof50 # - grundhoehe
+    print(grundhoehe, dachhoehe)
 
     for point_A, point_B in zip(points_2D[:-1], points_2D[1:]):
         surface = []
