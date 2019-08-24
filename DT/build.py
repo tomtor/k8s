@@ -1,4 +1,7 @@
-# from https://gis.stackexchange.com/questions/230994/creating-simple-citygml-3d-models-based-on-2d-shapefiles-alkis-shp2gml-using-p
+# Adapted from https://gis.stackexchange.com/questions/230994/creating-simple-citygml-3d-models-based-on-2d-shapefiles-alkis-shp2gml-using-p
+# This Postgis version works on data from http://3dbag.bk.tudelft.nl/
+# 
+# tvijlbrief@gmail.com
 
 gemeentecode = '0308'
 
@@ -74,7 +77,7 @@ def build_gml_main():
     cursor = connection.cursor()
     cursor.execute(
         "select identificatie, geovlak, \"roof-0.50\" as roof50 \
-        from \"3dbag\".pand3d where gemeentecode = '" + gemeentecode + "'")
+        from \"3dbag\".pand3d where height_valid and gemeentecode = '" + gemeentecode + "'")
 
     # Add buildings
     cityModel, point_max, point_min = iteration_buildings(
@@ -104,9 +107,6 @@ def iteration_buildings(cityModel, cursor, ns_core, ns_bldg, ns_gen, ns_gml, ns_
     # upper corner
     point_max = None
 
-    # building_count = len(shp_layer.shapes())
-    # field_content = shp_layer.records()
-
     # iteration
     for i_build in cursor.fetchall():  # range(building_count):
         r = reg(cursor, i_build)
@@ -115,11 +115,9 @@ def iteration_buildings(cityModel, cursor, ns_core, ns_bldg, ns_gen, ns_gml, ns_
             cityModel, "{%s}cityObjectMember" % ns_core)
 
         # building shape area
-        points_2D = wkb.loads(r.geovlak, hex=True).exterior.coords # shp_layer.shapes()[i_build].points
+        points_2D = wkb.loads(r.geovlak, hex=True).exterior.coords
         # print(points_2D[0])
 
-        # contents which are given in the shapefile and needed in the citygml model
-        #inits = building_inits(field_content[i_build], shp_layer)
 
         # for Citygml the lower and upper limit of all buildings are needed
         point_min, point_max = find_lower_upper_corner(
@@ -132,52 +130,20 @@ def iteration_buildings(cityModel, cursor, ns_core, ns_bldg, ns_gen, ns_gml, ns_
         bldg = etree.SubElement(cityObject, "{%s}Building" % ns_bldg, {
                                 "{%s}id" % ns_gml: r.identificatie})
         creationDate = etree.SubElement(bldg, "{%s}creationDate" % ns_core)
-        creationDate.text = '2017-02-04'
+        creationDate.text = '2019-01-01'
         externalReference = etree.SubElement(
             bldg, "{%s}externalReference" % ns_core)
         informationSystem = etree.SubElement(
             externalReference, "{%s}informationSystem" % ns_core)
-        informationSystem.text = "http://www.BananenBAUM2017.de"
+        informationSystem.text = "https://github.com/tomtor/k8s/blob/master/DT/build.py"
         externalObject = etree.SubElement(
             externalReference, "{%s}externalObject" % ns_core)
         name = etree.SubElement(externalObject, "{%s}name" % ns_core)
         name.text = r.identificatie
 
-        # stringAttribute = etree.SubElement(
-        #     bldg, "{%s}stringAttribute" % ns_gen, name="Gemeindeschluessel")
-        # value = etree.SubElement(stringAttribute, "{%s}value" % ns_gen)
-        # value.text = inits['bezirk']
-
-        # stringAttribute = etree.SubElement(
-        #     bldg, "{%s}stringAttribute" % ns_gen, name="DatenquelleDachhoehe")
-        # value = etree.SubElement(stringAttribute, "{%s}value" % ns_gen)
-        # value.text = str(1000)
-
-        # stringAttribute = etree.SubElement(
-        #     bldg, "{%s}stringAttribute" % ns_gen, name="DatenquelleLage")
-        # value = etree.SubElement(stringAttribute, "{%s}value" % ns_gen)
-        # value.text = str(1000)
-
-        # stringAttribute = etree.SubElement(
-        #     bldg, "{%s}stringAttribute" % ns_gen, name="DatenquelleBodenhoehe")
-        # value = etree.SubElement(stringAttribute, "{%s}value" % ns_gen)
-        # value.text = str(1300)
-
-        # stringAttribute = etree.SubElement(
-        #     bldg, "{%s}stringAttribute" % ns_gen, name="BezugspunktDach")
-        # value = etree.SubElement(stringAttribute, "{%s}value" % ns_gen)
-        # value.text = str(2100)
-
-        # function = etree.SubElement(bldg, "{%s}function" % ns_bldg)
-        # function.text = str(inits['funktion'])
-
         measuredHeight = etree.SubElement(
             bldg, "{%s}measuredHeight" % ns_bldg, uom="urn:adv:uom:m")
         measuredHeight.text = str(r.roof50)
-
-        # storeysAboveGround = etree.SubElement(
-        #     bldg, "{%s}storeysAboveGround" % ns_bldg)
-        # storeysAboveGround.text = str(inits['Anz_O'])
 
         # Add the 3d polygon
         lod1Solid = etree.SubElement(bldg, "{%s}lod1Solid" % ns_bldg)
