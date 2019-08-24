@@ -1,6 +1,7 @@
 # from https://gis.stackexchange.com/questions/230994/creating-simple-citygml-3d-models-based-on-2d-shapefiles-alkis-shp2gml-using-p
 
-# import shapefile
+gemeentecode = '0308'
+
 import os
 import psycopg2
 
@@ -59,7 +60,8 @@ def build_gml_main():
     bounded = etree.SubElement(cityModel, "{%s}boundedBy" % ns_gml)
     # Add branch to a branch
     envelop = etree.SubElement(
-        bounded, "{%s}Envelope" % ns_gml, srsName="urn:adv:crs:ETRS89_UTM32*DE_DHHN92_NH")
+        bounded, "{%s}Envelope" % ns_gml, srsName="EPSG:28992", srsDimension="3")
+
     lb = etree.SubElement(envelop, "{%s}lowerCorner" %
                           ns_gml, srsDimension="3")
     lb.text = ''
@@ -72,7 +74,7 @@ def build_gml_main():
     cursor = connection.cursor()
     cursor.execute(
         "select identificatie, geovlak, \"roof-0.50\" as roof50 \
-        from \"3dbag\".pand3d where tile_id = '07fz1' limit 10")
+        from \"3dbag\".pand3d where gemeentecode = '" + gemeentecode + "' limit 10")
 
     # Add buildings
     cityModel, point_max, point_min = iteration_buildings(
@@ -89,7 +91,7 @@ def build_gml_main():
 
     # Save File
     #et = etree.ElementTree(cityModel)
-    outFile = open('output_b.xml', 'w')
+    outFile = open('3dbag-' + gemeentecode + '.xml', 'w')
     #et.write(outFile, xml_declaration=True,
              #encoding='utf-8', pretty_print=True)
     outFile.write(pretty.decode('utf-8'))
