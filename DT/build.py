@@ -4,9 +4,9 @@
 # tvijlbrief@gmail.com
 
 # gemeentecode = '0034' # almere
-# gemeentecode = '0981' # vaals
+gemeentecode = '0981' # vaals
 # gemeentecode = '0308' # baarn
-gemeentecode = '0424' # muiden
+# gemeentecode = '0424' # muiden
 
 import os
 import psycopg2
@@ -66,6 +66,7 @@ def build_gml_main():
     # Add branch to a branch
     envelop = etree.SubElement(
         bounded, "{%s}Envelope" % ns_gml, srsName="EPSG:7415", srsDimension="3")
+        # bounded, "{%s}Envelope" % ns_gml, srsName="EPSG:28992", srsDimension="3")
 
     lb = etree.SubElement(envelop, "{%s}lowerCorner" %
                           ns_gml, srsDimension="3")
@@ -185,11 +186,9 @@ def iteration_buildings(cityModel, cursor, ns_core, ns_bldg, ns_gen, ns_gml, ns_
             # print etree.tostring(cityModel, pretty_print=True)
 
             if polycnt >= len(orgpoly) - 2:
-                interior = None
                 for inner in iepoly.interiors:
                     print("add inner ring", len(orgpoly))
-                    if interior is None:
-                        interior = etree.SubElement(polygon, "{%s}interior" % ns_gml)
+                    interior = etree.SubElement(polygon, "{%s}interior" % ns_gml)
                     LinearRing = etree.SubElement(interior, "{%s}LinearRing" % ns_gml)
                     for point in inner.coords:
                         pos = etree.SubElement(
