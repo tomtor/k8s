@@ -7,9 +7,10 @@
 # tvijlbrief@gmail.com
 
 # gemeentecode = '0034' # almere
-gemeentecode = '0981' # vaals
-# gemeentecode = '0308' # baarn
+# gemeentecode = '0981' # vaals
+gemeentecode = '0308' # baarn
 # gemeentecode = '0424' # muiden
+gemeentecode = 'holes'
 
 to_0 = True
 
@@ -47,8 +48,6 @@ def build_gml_main():
     ns_xsi = "http://www.w3.org/2001/XMLSchema-instance"
     ns_schemaLocation = "http://www.opengis.net/citygml/1.0 http://schemas.opengis.net/citygml/1.0/cityGMLBase.xsd http://www.opengis.net/citygml/building/1.0 http://schemas.opengis.net/citygml/building/1.0/building.xsd http://www.opengis.net/citygml/generics/1.0 http://schemas.opengis.net/citygml/generics/1.0/generics.xsd http://www.opengis.net/gml http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"
 
-    #ns_core, ns_bldg, ns_gen, ns_gml, ns_xAL, ns_xlink, ns_xsi
-
     nsmap = {
         'core': ns_core,
         'bldg': ns_bldg,
@@ -85,8 +84,9 @@ def build_gml_main():
         "select identificatie, geovlak, \
             \"roof-0.50\" as roof50, \
             \"ground-0.50\" as ground50 \
-        from \"3dbag\".pand3d where height_valid \
-            and gemeentecode = '" + gemeentecode + "'")
+        from \"3dbag\".pand3d where height_valid and " + \
+            ("gemeentecode = '" + gemeentecode + "'" if gemeentecode != 'holes' \
+                else "st_numinteriorrings(geovlak) > 0") + ";")
 
     # Add buildings
     cityModel, point_max, point_min = iteration_buildings(
