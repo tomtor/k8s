@@ -1,4 +1,7 @@
-# Adapted from https://gis.stackexchange.com/questions/230994/creating-simple-citygml-3d-models-based-on-2d-shapefiles-alkis-shp2gml-using-p
+# Convert PostgreSQL (BAG/3D) data to CityGML LOD1
+# 
+# Inspired by https://gis.stackexchange.com/questions/230994/creating-simple-citygml-3d-models-based-on-2d-shapefiles-alkis-shp2gml-using-p
+#
 # This Postgis version works on data from http://3dbag.bk.tudelft.nl/
 # 
 # tvijlbrief@gmail.com
@@ -7,6 +10,8 @@
 gemeentecode = '0981' # vaals
 # gemeentecode = '0308' # baarn
 # gemeentecode = '0424' # muiden
+
+to_0 = True
 
 import os
 import psycopg2
@@ -80,7 +85,8 @@ def build_gml_main():
         "select identificatie, geovlak, \
             \"roof-0.50\" as roof50, \
             \"ground-0.50\" as ground50 \
-        from \"3dbag\".pand3d where height_valid and gemeentecode = '" + gemeentecode + "'")
+        from \"3dbag\".pand3d where height_valid \
+            and gemeentecode = '" + gemeentecode + "'")
 
     # Add buildings
     cityModel, point_max, point_min = iteration_buildings(
@@ -91,7 +97,6 @@ def build_gml_main():
     ub.text = str(point_max[0]) + ' ' + \
         str(point_max[1]) + ' ' + str(point_max[2])
 
-    # pretty print
     pretty = etree.tostring(cityModel, pretty_print=True)
     # print(pretty)
 
@@ -108,18 +113,18 @@ def iteration_buildings(cityModel, cursor, ns_core, ns_bldg, ns_gen, ns_gml, ns_
     point_max = None
     count = 0
 
-    # iteration
     for i_build in cursor.fetchall():
         r = reg(cursor, i_build)
         # print(r.identificatie, r.ground50, r.roof50)
         if not r.ground50:
-            # r.ground50 = 0.0
             continue
+        if to_0:
+            r.roof50 -= r.ground50
+            r.ground50 = 0
         count += 1
         cityObject = etree.SubElement(
             cityModel, "{%s}cityObjectMember" % ns_core)
 
-        # building shape area
         iepoly = wkb.loads(r.geovlak, hex=True)
         points_2D = iepoly.exterior.coords
 
@@ -127,22 +132,13 @@ def iteration_buildings(cityModel, cursor, ns_core, ns_bldg, ns_gen, ns_gml, ns_
         point_min, point_max = find_lower_upper_corner(
             points_2D, r.roof50, point_min, point_max)
 
-        # calculation of the polygon by useing the points from the building shape area
         polygon = polygon_calculation(r, points_2D, False)
-        # print("len", len(polygon))
 
-        inner = []
-        icount = 0
         for iring in iepoly.interiors:
-            icount += 1
-            print(r.identificatie, "inner:", icount)
-            inner.append(polygon_calculation(r, iring.coords, True))
-
-        for isurf in inner:
-            for surf in isurf:
+            for surf in polygon_calculation(r, iring.coords, True):
                 polygon.insert(0, surf)
 
-        # Add branch and sub-branche of a building
+        # Add XML of a building
         bldg = etree.SubElement(cityObject, "{%s}Building" % ns_bldg, {
                                 "{%s}id" % ns_gml: 'ID' + r.identificatie})
         creationDate = etree.SubElement(bldg, "{%s}creationDate" % ns_core)
@@ -169,13 +165,12 @@ def iteration_buildings(cityModel, cursor, ns_core, ns_bldg, ns_gen, ns_gml, ns_
             exterior, "{%s}CompositeSurface" % ns_gml)
 
         polycnt = 0
-        orgpoly = polygon
         for poly in polygon:
             surfaceMember = etree.SubElement(
                 CompositeSurface, "{%s}surfaceMember" % ns_gml)
-            polygon = etree.SubElement(surfaceMember, "{%s}Polygon" % ns_gml, {
+            xmlpol = etree.SubElement(surfaceMember, "{%s}Polygon" % ns_gml, {
                                        "{%s}id" % ns_gml: 'P' + r.identificatie + '_' + str(polycnt)})
-            exterior = etree.SubElement(polygon, "{%s}exterior" % ns_gml)
+            exterior = etree.SubElement(xmlpol, "{%s}exterior" % ns_gml)
             LinearRing = etree.SubElement(exterior, "{%s}LinearRing" % ns_gml)
 
             for point in poly:
@@ -183,23 +178,19 @@ def iteration_buildings(cityModel, cursor, ns_core, ns_bldg, ns_gen, ns_gml, ns_
                     LinearRing, "{%s}pos" % ns_gml, srsDimension="3")
                 pos.text = str(point[0]) + ' ' + \
                     str(point[1]) + ' ' + str(point[2])
-            # print etree.tostring(cityModel, pretty_print=True)
 
-            if polycnt >= len(orgpoly) - 2:
+            if polycnt >= len(polygon) - 2:
                 for inner in iepoly.interiors:
-                    print("add inner ring", len(orgpoly))
-                    interior = etree.SubElement(polygon, "{%s}interior" % ns_gml)
+                    print("add inner ring", len(polygon))
+                    interior = etree.SubElement(xmlpol, "{%s}interior" % ns_gml)
                     LinearRing = etree.SubElement(interior, "{%s}LinearRing" % ns_gml)
                     for point in inner.coords:
                         pos = etree.SubElement(
                             LinearRing, "{%s}pos" % ns_gml, srsDimension="3")
-                        pos.text = str(point[0]) + ' ' + \
-                            str(point[1]) + ' ' + str(r.ground50 if polycnt ==
-                                                      len(orgpoly) - 2 else r.roof50)
-                    # print(etree.tostring(polygon))
+                        pos.text = str(point[0]) + ' ' + str(point[1]) + ' ' \
+                            + str(r.ground50 if polycnt ==
+                                  len(polygon) - 2 else r.roof50)
             polycnt += 1
-
-        # print etree.tostring(cityModel, pretty_print=True)
 
         if count % 500 == 0:
             print('done: ' + str(count) + ' objects')
@@ -208,21 +199,19 @@ def iteration_buildings(cityModel, cursor, ns_core, ns_bldg, ns_gen, ns_gml, ns_
     return cityModel, point_max, point_min
 
 
-def polygon_calculation(inits, points_2D, inner):
+def polygon_calculation(tuple, points_2D, inner):
 
     polygon = []
-    grundhoehe = inits.ground50
-    # extimated roof heigth
-    dachhoehe = inits.roof50 # - grundhoehe
-    # print(grundhoehe, dachhoehe)
+    ground_height = tuple.ground50
+    roof_height = tuple.roof50
 
     for point_A, point_B in zip(points_2D[:-1], points_2D[1:]):
         surface = []
-        surface.append((point_A[0], point_A[1], dachhoehe))
-        surface.append((point_B[0], point_B[1], dachhoehe))
-        surface.append((point_B[0], point_B[1], grundhoehe))
-        surface.append((point_A[0], point_A[1], grundhoehe))
-        surface.append((point_A[0], point_A[1], dachhoehe))
+        surface.append((point_A[0], point_A[1], roof_height))
+        surface.append((point_B[0], point_B[1], roof_height))
+        surface.append((point_B[0], point_B[1], ground_height))
+        surface.append((point_A[0], point_A[1], ground_height))
+        surface.append((point_A[0], point_A[1], roof_height))
 
         polygon.append(surface)
 
@@ -236,8 +225,8 @@ def polygon_calculation(inits, points_2D, inner):
     roof = []
     ground = []
     for point in points_2D:
-        roof.append((point[0], point[1], dachhoehe))
-        ground.append((point[0], point[1], grundhoehe))
+        roof.append((point[0], point[1], roof_height))
+        ground.append((point[0], point[1], ground_height))
     polygon.append(ground)
     polygon.append(roof)
 
