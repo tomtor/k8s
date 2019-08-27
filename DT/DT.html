@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <!-- Make the application on mobile take up the full browser screen and disable user scaling. -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
-  <title>Hello World!</title>
+  <title>DT tests</title>
   <script src="../Build/Cesium/Cesium.js"></script>
   <style>
       @import url(../Build/Cesium/Widgets/widgets.css);
@@ -20,17 +20,23 @@
   <div id="cesiumContainer"></div>
   <script>
     Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI1ODRhYTQzZi01N2ExLTRhZGUtYTY2Yi05YzkxYzZhM2UzMjQiLCJpZCI6MTQ4NDEsInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1NjY0NjEwODN9.mdk2QQOVyf68PrIEuo2B0afKnYPkq5Fxx2HgiYVFqlg';
+
     var viewer = new Cesium.Viewer('cesiumContainer');
 
-    var promise = Cesium.GeoJsonDataSource.load('/public/DT/data/0308.json');
+    var promise = Cesium.GeoJsonDataSource.load('/public/DT/data/0308.json', {
+    // var promise = Cesium.GeoJsonDataSource.load('/public/DT/data/0080.json', {
+        stroke: Cesium.Color.HOTPINK,
+        fill: Cesium.Color.PINK.withAlpha(0.9),
+        strokeWidth: 2
+    });
     promise.then(function(dataSource) {
-        viewer.dataSources.add(dataSource);
         var entities = dataSource.entities.values;
         for (var i = 0; i < entities.length; i++) {
           var entity = entities[i];                       
           //Extrude the polygon based on any attribute you desire         
           entity.polygon.extrudedHeight = entity.properties.roof50 - entity.properties.ground50;
         }
+        viewer.dataSources.add(dataSource);
     });
 
     viewer.zoomTo(promise);
