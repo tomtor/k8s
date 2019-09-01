@@ -27,5 +27,9 @@ data:
                 fastcgi_pass mapserver-fcgi:9001;
                 include /etc/nginx/fastcgi_params;
             }
+            location /data/ {
+                root /;
+                expires 1h;
+            }
         }
     }

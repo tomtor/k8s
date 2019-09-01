@@ -1,3 +1,32 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: nginx-volume
+  labels:
+    type: local
+    app: mapserver
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/data/nginx"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: nginx-pv-claim
+  labels:
+    app: mapserver
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
 ---
 apiVersion: apps/v1beta1
 kind: Deployment
@@ -19,7 +48,12 @@ spec:
           volumeMounts:
             - name: nginx-conf
               mountPath: /config/nginx
+            - name: mapserver
+              mountPath: /data
       volumes:
+        - name: mapserver
+          persistentVolumeClaim:
+            claimName: nginx-pv-claim
         - name: nginx-conf
           configMap:
             name: mapserver-config
