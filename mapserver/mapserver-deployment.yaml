@@ -49,7 +49,7 @@ spec:
             - name: nginx-conf
               mountPath: /config/nginx
             - name: mapserver
-              mountPath: /data
+              mountPath: /etc/nginx/html
       volumes:
         - name: mapserver
           persistentVolumeClaim:
