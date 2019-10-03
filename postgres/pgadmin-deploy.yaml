@@ -1,9 +1,14 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: pgadmin4
+  labels:
+    app: pgadmin4
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: pgadmin4
   template:
     metadata:
       labels:
@@ -12,7 +17,7 @@ spec:
       containers:
         - name: pgadmin4
           #image: dpage/pgadmin4:4.4
-          image: dpage/pgadmin4:4.11
+          image: dpage/pgadmin4:4.13
           imagePullPolicy: "IfNotPresent"
           ports:
             - containerPort: 80
