@@ -1,9 +1,15 @@
-apiVersion: extensions/v1beta1
+#apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres
+  labels:
+    app: postgres
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
   template:
     metadata:
       labels:
@@ -14,8 +20,9 @@ spec:
           # image: postgres:11.1
           # image: mdillon/postgis:latest
           # image: tomtor/postgis:postgis251_1e-1_fix12_tolerance
-          image: tomtor/postgis:postgis251_11.3_fix
-          # image: tomtor/postgis:postgis300_12.beta_fix
+          # image: tomtor/postgis:postgis251_11.3_fix
+          # image: tomtor/postgis:postgis300trunk_SFCGAL413_12.beta
+          image: tomtor/postgis:postgis300trunk_SFCGAL413_12.rc1
           imagePullPolicy: "IfNotPresent"
           ports:
             - containerPort: 5432
@@ -36,5 +43,5 @@ spec:
       volumes:
         - name: postgredb
           persistentVolumeClaim:
-            claimName: postgres-pv-claim
-            #claimName: postgres12-pv-claim
+            #claimName: postgres-pv-claim
+            claimName: postgres12-0-pv-claim

@@ -2,7 +2,9 @@
 
 HOSTNAME=tom-kad-k8s.westeurope.cloudapp.azure.com
 
-PGDIR=/data/pg11/pg11.2
+#PGDIR=/data/pg11/pg11.2
+#PGDIR=/data/pg/pg12.0beta
+PGDIR=/data/pg/pg12
 PGOWNER=70
 
 PATH=/snap/bin:$PATH
@@ -25,3 +27,4 @@ rm -rf $CRDIR
 sudo cp /etc/letsencrypt/live/$HOSTNAME/fullchain.pem $PGDIR/server.crt
 sudo cp /etc/letsencrypt/live/$HOSTNAME/privkey.pem $PGDIR/server.key
 sudo chown $PGOWNER.$PGOWNER $PGDIR/server.key
+sudo chmod 0600 $PGDIR/server.key
