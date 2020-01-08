@@ -72,8 +72,8 @@ def send_js(path):
     print(path) # , app.static_url_path, app.static_folder)
     return send_from_directory(app.static_folder, path)
 
-@app.route("/")
-def hello():
+@app.route("/status")
+def status():
     try:
         visits = redis.incr("counter")
     except RedisError:
@@ -86,6 +86,10 @@ def hello():
            + get_delays() \
            + "</p>"
     return html.format(name=os.getenv("NAME", "world"), hostname=socket.gethostname(), visits=visits)
+
+@app.route("/")
+def hello():
+    return "Nothing here..."
 
 
 if __name__ == "__main__":

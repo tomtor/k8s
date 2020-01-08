@@ -8,3 +8,5 @@ data:
   # REDIS: brawny-eagle-redis-master
   REDIS: redis-master
   REDIS_PASSWORD: ""
+  PGHOST: postgres
+  PGPASS: TryMe!!!

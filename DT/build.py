@@ -8,9 +8,9 @@
 
 # gemeentecode = '0034' # almere
 # gemeentecode = '0981' # vaals
-gemeentecode = '0308' # baarn
 # gemeentecode = '0424' # muiden
-gemeentecode = 'holes'
+gemeentecode = '0308' # baarn
+# gemeentecode = 'holes'
 
 to_0 = True
 
@@ -69,7 +69,8 @@ def build_gml_main():
     bounded = etree.SubElement(cityModel, "{%s}boundedBy" % ns_gml)
     # Add branch to a branch
     envelop = etree.SubElement(
-        bounded, "{%s}Envelope" % ns_gml, srsName="EPSG:7415", srsDimension="3")
+        # bounded, "{%s}Envelope" % ns_gml, srsName="EPSG:7415", srsDimension="3")
+        bounded, "{%s}Envelope" % ns_gml, srsName="urn:ogc:def:crs:EPSG::7415", srsDimension="3")
         # bounded, "{%s}Envelope" % ns_gml, srsName="EPSG:28992", srsDimension="3")
 
     lb = etree.SubElement(envelop, "{%s}lowerCorner" %
@@ -86,7 +87,7 @@ def build_gml_main():
             \"ground-0.50\" as ground50 \
         from \"3dbag\".pand3d where height_valid and " + \
             ("gemeentecode = '" + gemeentecode + "'" if gemeentecode != 'holes' \
-                else "st_numinteriorrings(geovlak) > 0") + ";")
+                else "st_numinteriorrings(geovlak) > 0") + " limit 5000;")
 
     # Add buildings
     cityModel, point_max, point_min = iteration_buildings(

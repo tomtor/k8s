@@ -28,12 +28,17 @@ spec:
     requests:
       storage: 1Gi
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: pythonapp
+  labels:
+    app: pythonapp
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: pythonapp
   template:
     metadata:
       labels:
@@ -41,7 +46,7 @@ spec:
     spec:
       containers:
         - name: pythonapp
-          image: tomtor/test-k8s:hello-0.18
+          image: tomtor/test-k8s:hello-0.20
           # imagePullPolicy: "Always"
           ports:
             - containerPort: 80
