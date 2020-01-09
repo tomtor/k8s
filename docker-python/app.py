@@ -174,12 +174,16 @@ def upload_file():
     <title>Add Kadaster Repository to Archi File</title>
     <h1>Upload existing .archimate File</h1>
     <p>In return you will receive a new .archimate with an (updated) Kadaster
-    Repository and <i>.kad</i> prefix.
+    Repository and <tt>kad.</tt> prefix.
     </p>
     <form method=post enctype=multipart/form-data>
       <input type=file name=file>
       <input type=submit value=Upload>
     </form>
+    <p>
+    Questions/suggestions/donations (&euro;40) to: <A
+    HREF="mailto:tom.vijlbrief@kadaster.nl">tom.vijlbrief@kadaster.nl</A>
+    <p>
     '''
 
 if __name__ == "__main__":
