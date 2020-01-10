@@ -46,8 +46,8 @@ spec:
     spec:
       containers:
         - name: pythonapp
-          image: tomtor/test-k8s:hello-0.20
-          # imagePullPolicy: "Always"
+          image: tomtor/test-k8s:hello-0.26
+          imagePullPolicy: "Always"
           ports:
             - containerPort: 80
           envFrom:

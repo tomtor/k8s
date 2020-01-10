@@ -108,7 +108,7 @@ import uuid
 from archi_test.update import update_repo
 
 def update_archi(filename):    
-    tree = update_repo(filename)
+    tree = update_repo(UPLOAD_FOLDER + "/" + filename)
     tree.write(UPLOAD_FOLDER + "/kad." + filename)
     return redirect(url_for('uploaded_file', filename="kad." + filename))
 
