@@ -138,7 +138,6 @@ def update_archi(filename):
                 old.attrib["name"] = "OLD-Repo"
                 old.attrib["id"] = str(uuid.uuid4())
                 old.attrib["type"] = "other"
-                root.append(old)
             aelem = old_repo.find(".//element[@id='" + aelem + "']")
             old.append(aelem)
 
