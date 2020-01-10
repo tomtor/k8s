@@ -105,46 +105,10 @@ import xml.etree.cElementTree as ET
 import urllib.request
 import uuid
 
+from archi_test.update import update_repo
 
-def update_archi(filename):
-    response = urllib.request.urlopen(
-        'https://raw.githubusercontent.com/tomtor/archi-test/master/Kadaster-Repository.archimate')
-    new_repo = response.read()
-    new_repo = ET.fromstring(new_repo)
-
-    data = ET.parse(UPLOAD_FOLDER + "/" + filename)
-
-    # ================== update code here ==========
-
-    root = data.getroot()
-    root.attrib["xmlns:archimate"] = "http://www.archimatetool.com/archimate"
-
-    old_repo = root.find(".//folder[@name='Kadaster Repository']")
-    if old_repo:
-        print("update old repo:", filename)
-        root.remove(old_repo)
-    else:
-        print("no old repo:", filename)
-    root.insert(0, new_repo.find(".//folder[@name='Kadaster Repository']"))
-
-    for e in root.findall(".//child[@archimateElement]"):
-        aelem = e.get("archimateElement")
-        if not root.findall(".//element[@id='" + aelem + "']"):
-            print("Removed: ", aelem)
-            old = root.find(".//folder[@name='OLD-Repo']")
-            if not old:
-                print("Create OLD-Repo folder")
-                old = ET.SubElement(root, "folder")
-                old.attrib["name"] = "OLD-Repo"
-                old.attrib["id"] = str(uuid.uuid4())
-                old.attrib["type"] = "other"
-            aelem = old_repo.find(".//element[@id='" + aelem + "']")
-            old.append(aelem)
-
-    tree = ET.ElementTree(root)
-
-    # ================== update code end ==========
-
+def update_archi(filename):    
+    tree = update_repo(filename)
     tree.write(UPLOAD_FOLDER + "/kad." + filename)
     return redirect(url_for('uploaded_file', filename="kad." + filename))
 
