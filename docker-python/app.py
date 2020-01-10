@@ -113,14 +113,18 @@ def update_archi(filename):
     new_repo = ET.fromstring(new_repo)
 
     data = ET.parse(UPLOAD_FOLDER + "/" + filename)
+
+    # ================== update code here ==========
+
     root = data.getroot()
     root.attrib["xmlns:archimate"] = "http://www.archimatetool.com/archimate"
 
     old_repo = root.find(".//folder[@name='Kadaster Repository']")
     if old_repo:
+        print("update old repo:", filename)
         root.remove(old_repo)
     else:
-        print("no old repo")
+        print("no old repo:", filename)
     root.insert(0, new_repo.find(".//folder[@name='Kadaster Repository']"))
 
     for e in root.findall(".//child[@archimateElement]"):
@@ -139,6 +143,8 @@ def update_archi(filename):
             old.append(aelem)
 
     tree = ET.ElementTree(root)
+
+    # ================== update code end ==========
 
     tree.write(UPLOAD_FOLDER + "/kad." + filename)
     return redirect(url_for('uploaded_file', filename="kad." + filename))
