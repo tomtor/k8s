@@ -187,8 +187,8 @@ def upload_file():
       <input type=submit value=Upload>
     </form>
     <p>
-    Questions/suggestions/donations (&euro;40) to: <A
-    HREF="mailto:tom.vijlbrief@kadaster.nl">tom.vijlbrief@kadaster.nl</A>
+    Questions/suggestions to:
+    <A HREF="mailto:tom.vijlbrief@kadaster.nl">tom.vijlbrief@kadaster.nl</A>
     <p>
     '''
 
