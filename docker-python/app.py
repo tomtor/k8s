@@ -15,7 +15,10 @@ threaded_postgreSQL_pool = None
 def db_connect():
     global threaded_postgreSQL_pool
     if threaded_postgreSQL_pool:
-        threaded_postgreSQL_pool.closeall()
+        try:
+          threaded_postgreSQL_pool.closeall()
+        except:
+          pass
     print("Connecting", file=sys.stderr)
     threaded_postgreSQL_pool = psycopg2.pool.ThreadedConnectionPool(5, 20,
                                   user="tom",
@@ -107,7 +110,7 @@ import uuid
 
 from archi_test.update import update_repo
 
-def update_archi(filename):    
+def update_archi(filename):
     tree = update_repo(UPLOAD_FOLDER + "/" + filename)
     tree.write(UPLOAD_FOLDER + "/kad." + filename)
     return redirect(url_for('uploaded_file', filename="kad." + filename))

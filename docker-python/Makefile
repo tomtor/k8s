@@ -1,4 +1,7 @@
-VERSION=0.26
+VERSION=0.29
+
+pull:
+	cd archi_test; git pull
 
 run:
 	NAME=Tom PORT=8888 REDIS=10.152.183.113 PGHOST=localhost PGPORT=30779 python3 -u app.py
@@ -6,7 +9,7 @@ run:
 test:
 	curl localhost:8888
 
-build:
+build: pull
 	docker build --tag=tomtor/test-k8s:hello-$(VERSION) .
 
 push:
