@@ -1,3 +1,33 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: pgadmin-volume
+  labels:
+    type: local
+    app: pgadmin4
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/data/pgadmin"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pgadmin4-pv-claim
+  labels:
+    app: pgadmin4
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -17,7 +47,7 @@ spec:
       containers:
         - name: pgadmin4
           #image: dpage/pgadmin4:4.4
-          image: dpage/pgadmin4:4.13
+          image: dpage/pgadmin4:4.19
           imagePullPolicy: "IfNotPresent"
           ports:
             - containerPort: 80
@@ -30,4 +60,5 @@ spec:
       volumes:
         - name: pgadmin-volume
           persistentVolumeClaim:
-            claimName: myclaim
+            #claimName: myclaim
+            claimName: pgadmin4-pv-claim
