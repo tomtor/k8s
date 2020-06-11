@@ -36,7 +36,7 @@ def query():
     cursor.execute("select t, d from (select t, t - lag(t) over() as d \
         from hartbeat) as ss where \
         extract(hour from d) * 3600 + extract(minute from d) * 60 + extract(seconds from d) > 65 \
-        order by t desc limit 10;")
+        order by t desc limit 20;")
     return connection, cursor
 
 
