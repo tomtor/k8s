@@ -1,4 +1,5 @@
-apiVersion: extensions/v1beta1
+#apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
@@ -16,21 +17,30 @@ spec:
    - host: k8s.v7f.eu
      http:
        paths:
-       - path: /
+       - pathType: Prefix
+         path: /
          backend:
-           serviceName: pythonapp
-           servicePort: 80
+           service:
+             name: pythonapp
+             port:
+               number: 80
    - host: pgadmin.v7f.eu
      http:
        paths:
-       - path: /
+       - pathType: Prefix
+         path: /
          backend:
-           serviceName: pgadmin4
-           servicePort: 80
+           service:
+             name: pgadmin4
+             port:
+               number: 80
    - host: geoserver.v7f.eu
      http:
        paths:
-       - path: /
+       - pathType: Prefix
+         path: /
          backend:
-           serviceName: geoserver
-           servicePort: 8080
+           service:
+             name: geoserver
+             port:
+               number: 8080
