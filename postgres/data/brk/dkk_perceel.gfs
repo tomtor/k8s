@@ -4,8 +4,10 @@
     <ElementPath>Perceel</ElementPath>
     <GeometryElementPath>begrenzingPerceel</GeometryElementPath>
     <GeometryType>Polygon</GeometryType>
+<!--
     <GeometryElementPath>plaatscoordinaten</GeometryElementPath>
     <GeometryType>Point</GeometryType>
+-->
 <!--
     <GeoPropertyDefn>
       <Name>plaats</Name>

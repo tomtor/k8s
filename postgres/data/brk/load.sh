@@ -15,6 +15,8 @@ done
 
 ogr2ogr -progress -f "gpkg" -a_srs EPSG:28992 brk.gpkg PG:"dbname=$DB host=$HOST port=$PORT"
 
-mv brk.gpkg /data/pythonapp/public/
+zip brk.zip brk.gpkg
+rm brk.gpkg
+mv brk.zip /data/pythonapp/public/
 
 exit 0
