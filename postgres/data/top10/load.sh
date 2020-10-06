@@ -6,7 +6,9 @@ DB=top10
 SRC=TOP10NL_GML_Filechuncks_*/TOP10NL_GML_Filechuncks/
 
 dropdb -U $PGU -h $HOST -p $PORT $DB
-createdb -U $PGU -h $HOST -p $PORT $DB
+
+echo "CREATE DATABASE $DB TEMPLATE template0 LC_COLLATE 'nl_NL.UTF-8' LC_CTYPE 'nl_NL.UTF-8';" | psql -U $PGU -h $HOST -p $PORT postgres
+
 echo "create extension postgis;" | psql -U postgresadmin -h $HOST -p $PORT $DB
 
 rm -f top10.gfs
@@ -116,7 +118,7 @@ ALTER TABLE functioneelgebied ALTER COLUMN wkb_geometry type geometry(MultiPolyg
 
 EOF
 
-echo "select 'ALTER TABLE ' || tablename || ' drop column bronbeschrijving;' from pg_tables where schemaname = 'public' and tablename <> 'spatial_ref_sys';" | psql -U $PGU -h $HOST -p $PORT $DB -t | psql -U $PGU -h $HOST -p $PORT $DB
+# echo "select 'ALTER TABLE ' || tablename || ' drop column bronbeschrijving;' from pg_tables where schemaname = 'public' and tablename <> 'spatial_ref_sys';" | psql -U $PGU -h $HOST -p $PORT $DB -t | psql -U $PGU -h $HOST -p $PORT $DB
 
 psql -U postgresadmin -h $HOST -p $PORT $DB << EOF
 vacuum full verbose;
