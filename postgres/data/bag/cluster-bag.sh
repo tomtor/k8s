@@ -3,19 +3,18 @@ HOST=localhost
 PGU=tom
 DB=bgt
 
-for f in $(echo "select tablename from pg_tables where tablename like 'bag_%pand%'" | \
+for TAB in $(echo "select tablename from pg_tables where tablename like 'bag_%'" | \
     psql -U $PGU -h $HOST -p $PORT -d $DB -t)
 do
-  TAB=$f
-  TABSHORT=$(echo $TAB | sed 's/bag_extract_deelbestand__antwoord_producten_lvc_//')
-
+  # if test $TAB = "bag_verblijfsobject"; then echo Skip $TAB continue; fi
   echo $(date) start clustering: $TAB
 
-  echo "CREATE INDEX ${TABSHORT}_wkb_geometry_hash_idx ON public.$TAB (ST_GeoHash(ST_Transform(pandgeometrie,4326)));" | psql -U $PGU -h $HOST -p $PORT $DB
+  INDEX=$(echo "SELECT indexname FROM pg_indexes WHERE tablename = '$TAB' and indexname not like '%pkey'" | \
+    psql -U $PGU -h $HOST -p $PORT -d $DB -t)
 
-  echo "CLUSTER VERBOSE public.$TAB USING ${TABSHORT}_wkb_geometry_hash_idx;" | psql -U $PGU -h $HOST -p $PORT $DB
-
-  echo "analyze verbose public.$TAB;" | psql -U $PGU -h $HOST -p $PORT $DB
+  if test -n "$INDEX"; then
+    echo "CLUSTER VERBOSE public.$TAB USING ${INDEX};" | psql -U $PGU -h $HOST -p $PORT $DB
+  fi
 
   echo $(date) end clustering of $TAB
   echo

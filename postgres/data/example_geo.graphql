@@ -1,0 +1,12 @@
+query MyQuery {
+  allRs(filter: {kadastralegrootte: {greaterThan: 1500},
+    begrenzingperceel: {contains: { type: "Point", 
+      crs:{type:"name",properties:{name:"EPSG:28992"}},
+      coordinates: [145000, 468000] }}}) {
+    nodes {
+      begrenzingperceel {
+        geojson
+      }
+    }
+  }
+}
