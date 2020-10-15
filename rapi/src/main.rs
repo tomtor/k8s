@@ -13,7 +13,7 @@ use rocket_contrib::databases::postgres;
 #[database("pg_brk")]
 struct BrkDbConn(postgres::Connection);
 
-#[get("/health")]
+#[get("/")]
 fn health() -> &'static str {
     "ok"
 }
