@@ -1,5 +1,8 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 
+use std::sync::{Arc, Mutex};
+use lazy_static::lazy_static;
+
 #[macro_use]
 extern crate rocket;
 #[macro_use]
@@ -15,8 +18,19 @@ fn health() -> &'static str {
     "ok"
 }
 
+lazy_static!{
+    static ref COUNT: Mutex<u32> = Mutex::new(0);
+}
+
 #[get("/lokaalid/<ogc_fid>")]
 fn lokaalid(conn: BrkDbConn, ogc_fid: i32) -> String {
+    {
+        let mut cnt = COUNT.lock().unwrap();
+        *cnt += 1;
+        if *cnt % 1000 == 0 {
+            println!("{}", *cnt);
+        }
+    }
     let stmt = conn
         .prepare_cached("SELECT lokaalid FROM perceel WHERE ogc_fid = $1")
         .unwrap();
