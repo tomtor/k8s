@@ -1,2 +1,5 @@
 [global.databases]
 pg_brk = { url = "postgresql://tom@localhost:30779/brk" }
+
+[production]
+#workers = 16

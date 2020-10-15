@@ -1,7 +1,6 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 
-use std::sync::{Mutex};
-use lazy_static::lazy_static;
+use std::sync::atomic::{AtomicUsize, Ordering};
 
 #[macro_use]
 extern crate rocket;
@@ -18,19 +17,15 @@ fn health() -> &'static str {
     "ok"
 }
 
-lazy_static!{
-    static ref COUNT: Mutex<u32> = Mutex::new(0);
-}
+static COUNT: AtomicUsize = AtomicUsize::new(0);
 
 #[get("/lokaalid/<ogc_fid>")]
 fn lokaalid(conn: BrkDbConn, ogc_fid: i32) -> String {
-    {
-        let mut cnt = COUNT.lock().unwrap();
-        *cnt += 1;
-        if *cnt % 1000 == 0 {
-            println!("{}", *cnt);
-        }
+    let old_count = COUNT.fetch_add(1, Ordering::SeqCst);
+    if (old_count + 1) % 1000 == 0 {
+        println!("{}", old_count + 1);
     }
+
     let stmt = conn
         .prepare_cached("SELECT lokaalid FROM perceel WHERE ogc_fid = $1")
         .unwrap();
