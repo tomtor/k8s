@@ -21,9 +21,9 @@ static COUNT: AtomicUsize = AtomicUsize::new(0);
 
 #[get("/lokaalid/<ogc_fid>")]
 fn lokaalid(conn: BrkDbConn, ogc_fid: i32) -> String {
-    let old_count = COUNT.fetch_add(1, Ordering::SeqCst);
-    if (old_count + 1) % 1000 == 0 {
-        println!("{}", old_count + 1);
+    let count = COUNT.fetch_add(1, Ordering::SeqCst) + 1;
+    if count % 1000 == 0 {
+        println!("{}", count);
     }
 
     let stmt = conn
