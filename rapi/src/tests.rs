@@ -1,4 +1,3 @@
-#[allow(unused_must_use)]
 #[cfg(test)]
 mod simple {
     use crate::build_rocket;
@@ -26,6 +25,6 @@ mod database {
         let mut response = client.get("/lokaalid/5").dispatch();
         assert_eq!(response.status(), Status::Ok);
         // assert_eq!(response.body_string(), Some("60025670000".into()));
-        response.body_string().unwrap().parse::<u64>();
+        assert_eq!(response.body_string().unwrap().parse::<u64>().err(), None);
     }
 }
