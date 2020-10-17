@@ -38,9 +38,15 @@ fn lokaalid(conn: BrkDbConn, ogc_fid: i32) -> String {
     }
 }
 
-fn main() {
+fn build_rocket() -> rocket::Rocket {
     rocket::ignite()
         .attach(BrkDbConn::fairing())
         .mount("/", routes![health, lokaalid])
-        .launch();
 }
+
+fn main() {
+    build_rocket().launch();
+}
+
+#[cfg(test)]
+mod tests;
