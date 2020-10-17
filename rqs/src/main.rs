@@ -7,7 +7,7 @@ fn main() -> Result<(), Error> {
     let mut rng = rand::thread_rng();
 
     let count = 1000;
-    let range = 10_000;
+    let range = 100_000;
 
     for _ in 1..=5 {
         let now = Instant::now();
@@ -25,8 +25,8 @@ fn main() -> Result<(), Error> {
         for _ in 1..count {
             let fid: i32 = rng.gen_range(1, range);
             let _row = client.query_one(&stmt, &[&fid])?;
-	    // let lid: i64 = row.get("lokaalid");
-	    // println!("{}", lid);
+            // let lid: i64 = row.get("lokaalid");
+            // println!("{}", lid);
         }
         println!("{}", now.elapsed().as_secs_f32());
         println!("=============================");

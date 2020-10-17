@@ -1,5 +1,4 @@
 #[allow(unused_must_use)]
-
 #[cfg(test)]
 mod simple {
     use crate::build_rocket;
@@ -7,15 +6,22 @@ mod simple {
     use rocket::local::Client;
 
     #[test]
-    fn test_root() {
+    fn root() {
         let client = Client::new(build_rocket()).expect("valid rocket instance");
         let mut response = client.get("/").dispatch();
         assert_eq!(response.status(), Status::Ok);
         assert_eq!(response.body_string(), Some("ok".into()));
     }
+}
+
+#[cfg(test)]
+mod database {
+    use crate::build_rocket;
+    use rocket::http::Status;
+    use rocket::local::Client;
 
     #[test]
-    fn test_lokaalid() {
+    fn lokaalid() {
         let client = Client::new(build_rocket()).expect("valid rocket instance");
         let mut response = client.get("/lokaalid/5").dispatch();
         assert_eq!(response.status(), Status::Ok);
