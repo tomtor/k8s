@@ -3,6 +3,13 @@ HOST=localhost
 PGU=tom
 DB=bgt
 
+dropdb -U $PGU -h $HOST -p $PORT $DB
+#createdb -U $PGU -h $HOST -p $PORT $DB
+
+echo "CREATE DATABASE $DB TEMPLATE template0 LC_COLLATE 'nl_NL.UTF-8' LC_CTYPE 'nl_NL.UTF-8';" | psql -U $PGU -h $HOST -p $PORT postgres
+
+echo "create extension postgis;" | psql -U postgresadmin -h $HOST -p $PORT $DB
+
 for f in *.gml # .gz
 do
   TAB=$(echo "$f" | sed -e "s/bgt_//" -e "s/\\.gml.*//")
@@ -14,13 +21,3 @@ do
   echo $TAB ends at $(date)
 
 done
-
-exit 0
-
-  echo "DROP TABLE $TAB;" | psql -U $PGU -h $HOST -p $PORT $DB
-
-  echo "CREATE INDEX ${TAB}_multi ON public.$TAB USING gist (wkb_geometry);" | \
-	psql -U $PGU -h $HOST -p $PORT $DB
-
-    ALTER TABLE public.kunstwerkdeel CLUSTER ON kunstwerkdeel_multi;" | psql -U $PGU -h $HOST -p $PORT $DB
-    # (geometrie_multivlak, geometrie_lijn, geometrie_multipunt, geometrie_vlak)
