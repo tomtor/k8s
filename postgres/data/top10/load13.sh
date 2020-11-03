@@ -1,5 +1,5 @@
 PORT=30778
-PORT=30779
+PORT=5433
 HOST=localhost
 PGU=tom
 DB=top10
@@ -7,9 +7,10 @@ DB=top10
 SRC=TOP10NL_GML_Filechuncks_*/TOP10NL_GML_Filechuncks/
 
 dropdb -U $PGU -h $HOST -p $PORT $DB
-#createdb -U $PGU -h $HOST -p $PORT $DB
+createdb -U $PGU -h $HOST -p $PORT $DB
 
-echo "CREATE DATABASE $DB TEMPLATE template0 LC_COLLATE 'nl_NL.UTF-8' LC_CTYPE 'nl_NL.UTF-8';" | psql -U $PGU -h $HOST -p $PORT postgres
+#echo "CREATE DATABASE $DB TEMPLATE template0 LC_COLLATE 'nl_NL.UTF-8' LC_CTYPE 'nl_NL.UTF-8';" | psql -U $PGU -h $HOST -p $PORT postgres
+#echo "CREATE DATABASE $DB;" | psql -U $PGU -h $HOST -p $PORT postgres
 
 echo "create extension postgis;" | psql -U postgresadmin -h $HOST -p $PORT $DB
 
@@ -20,7 +21,7 @@ awk '
      PREV=$0
      if (NR <= 2 || ($0 !~ "top10nl:FeatureCollectionT10NL" && $1 != "<?xml")) print $0
 }
-END { print PREV}' $SRC/*.gml > top10.gml
+END { print PREV}' $SRC/*0006[6].gml > top10.gml
 
 for f in top10.gml # $SRC/*.gml
 do
@@ -33,7 +34,8 @@ do
 
 done
 
-rm -rf TOP10NL* top10.g*
+#rm -rf TOP10NL* top10.g*
+exit 0
 
 psql -U postgresadmin -h $HOST -p $PORT $DB << EOF
 
@@ -119,6 +121,8 @@ update functioneelgebied set wkb_geometry = st_multi(wkb_geometry) where ST_Geom
 ALTER TABLE functioneelgebied ALTER COLUMN wkb_geometry type geometry(MultiPolygon, 28992);
 
 EOF
+
+exit 0
 
 # echo "select 'ALTER TABLE ' || tablename || ' drop column bronbeschrijving;' from pg_tables where schemaname = 'public' and tablename <> 'spatial_ref_sys';" | psql -U $PGU -h $HOST -p $PORT $DB -t | psql -U $PGU -h $HOST -p $PORT $DB
 
