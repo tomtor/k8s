@@ -14,3 +14,4 @@ sh load-bag.sh
 sh clean-bag.sh
 sh fix-woonplaats.sh
 sh cluster-bag.sh
+rm *.xml
