@@ -29,8 +29,10 @@ EOF
 
 echo "select count(*) from bag_pand;" | psql -U $PGU -h $HOST -p $PORT $DB
 
-echo "delete from bag_pand where tijdvakgeldigheid_einddatumtijdvakgeldigheid IS NOT NULL or aanduidingrecordinactief = 'J' or pandstatus = 'Pand gesloopt';" | psql -U $PGU -h $HOST -p $PORT $DB
+#echo "delete from bag_pand where tijdvakgeldigheid_einddatumtijdvakgeldigheid IS NOT NULL or aanduidingrecordinactief = 'J' or pandstatus = 'Pand gesloopt';" | psql -U $PGU -h $HOST -p $PORT $DB
 
-echo "delete from bag_pand where not st_isvalid(pandgeometrie);" | psql -U $PGU -h $HOST -p $PORT $DB
+#echo "delete from bag_pand where not st_isvalid(pandgeometrie);" | psql -U $PGU -h $HOST -p $PORT $DB
+#echo "select ogc_fid from bag_pand where not st_isvalid(pandgeometrie);" | psql -U $PGU -h $HOST -p $PORT $DB
+echo "update bag_pand set pandgeometrie = st_simplify(pandgeometrie, 0.001) where not st_isvalid(pandgeometrie);" | psql -U $PGU -h $HOST -p $PORT $DB
 
 psql -U $PGU -h $HOST -p $PORT $DB < diff-view.sql

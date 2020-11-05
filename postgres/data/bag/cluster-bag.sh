@@ -14,6 +14,8 @@ do
 
   if test -n "$INDEX"; then
     echo "CLUSTER VERBOSE public.$TAB USING ${INDEX};" | psql -U $PGU -h $HOST -p $PORT $DB
+  else
+    echo "VACUUM FULL public.$TAB;" | psql -U $PGU -h $HOST -p $PORT $DB
   fi
 
   echo $(date) end clustering of $TAB

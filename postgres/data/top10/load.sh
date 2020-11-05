@@ -35,7 +35,7 @@ done
 
 rm -rf TOP10NL* top10.g*
 
-psql -U postgresadmin -h $HOST -p $PORT $DB << EOF
+psql -U tom -h $HOST -p $PORT $DB << EOF
 
 select * into waterdeel_punt from waterdeel where ST_GeometryType(wkb_geometry) = 'ST_Point';
 ALTER TABLE waterdeel_punt ALTER COLUMN wkb_geometry type geometry(Point, 28992);
