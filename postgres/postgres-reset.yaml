@@ -1,0 +1,46 @@
+#apiVersion: extensions/v1beta1
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          args:
+          - pg_resetwal
+          - /var/lib/postgresql/data
+          #image: tomtor/postgis:postgis302_pg12.4
+          #image: tomtor/postgis:postgis302_pg13-patch
+          image: tomtor/postgis:postgis302_pg13.1
+          #image: postgres:latest
+          imagePullPolicy: "IfNotPresent"
+          securityContext:
+                    runAsUser: 70
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: postgres-config
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgredb
+      volumes:
+        - name: postgredb
+          persistentVolumeClaim:
+            #claimName: postgres12-pv-claim
+            claimName: postgres13-pv-claim
+          #azureDisk:
+            #kind: Managed
+            #diskName: tomK8SPG
+            #diskURI: /subscriptions/4ba64f77-f305-4862-b99a-51df644cb3e4/resourceGroups/Tom/providers/Microsoft.Compute/disks/tomK8SPG
