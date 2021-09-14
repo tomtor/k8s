@@ -46,6 +46,8 @@ CREATE OR REPLACE VIEW public.diffbagarea
 GRANT ALL ON TABLE public.diffbagarea TO PUBLIC;
 
 
+SET max_parallel_workers_per_gather = 1;
+
 create materialized view diffbagareamat as select * from diffbagarea order by wkb_geometry;
 
 CREATE INDEX diffbagareamat_wkb_geometry_geom_idx ON public.diffbagareamat USING gist (wkb_geometry) TABLESPACE pg_default;
