@@ -1,7 +1,7 @@
 kind: PersistentVolume
 apiVersion: v1
 metadata:
-  name: postgres-pvbt12-volume
+  name: postgres-pvbt12.2-volume
   labels:
     type: local
     app: postgres
@@ -12,12 +12,12 @@ spec:
   accessModes:
     - ReadWriteMany
   hostPath:
-    path: "/data/pg/pg12.0beta"
+    path: "/data/pg/pg12"
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: postgres12-0-pv-claim
+  name: postgres12-pv-claim
   labels:
     app: postgres
 spec:
@@ -27,33 +27,63 @@ spec:
   resources:
     requests:
       storage: 5Gi
-#---
-#kind: PersistentVolume
-#apiVersion: v1
-#metadata:
-#  name: postgrestemp-pv-volume
-#  labels:
-#    type: local
-#    app: postgres
-#spec:
-#  storageClassName: manual
-#  capacity:
-#    storage: 5Gi
-#  accessModes:
-#    - ReadWriteMany
-#  hostPath:
-#    path: "/mnt/postgres"
-#---
-#kind: PersistentVolumeClaim
-#apiVersion: v1
-#metadata:
-#  name: postgrestemp-pv-claim
-#  labels:
-#    app: postgres
-#spec:
-#  storageClassName: manual
-#  accessModes:
-#    - ReadWriteMany
-#  resources:
-#    requests:
-#      storage: 5Gi
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: postgres-pvbt13-volume
+  labels:
+    type: local
+    app: postgres
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/data/pg/pg13"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: postgres13-pv-claim
+  labels:
+    app: postgres
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: postgres-pvbt-volume
+  labels:
+    type: local
+    app: postgres
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/data/pg/pg"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: postgres-pv-claim
+  labels:
+    app: postgres
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi

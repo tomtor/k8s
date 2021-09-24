@@ -2,6 +2,8 @@ use postgres::{Connection, Error, TlsMode};
 use rand::Rng;
 use std::time::Instant;
 
+use std::{thread, time};
+
 fn main() -> Result<(), Error> {
     let url = "postgresql://tom@localhost:30779/brk";
     let conn = Connection::connect(url, TlsMode::None).unwrap();
@@ -17,9 +19,10 @@ fn main() -> Result<(), Error> {
         for _ in 1..count {
             let fid: i32 = rng.gen_range(1, range);
 	    for row in &stmt.query(&[&fid]).unwrap() {
-		let _lid: i64 = row.get("lokaalid");
-		// println!("{}", lid)
+		let lid: i64 = row.get("lokaalid");
+		//println!("{}", lid)
 	    }
+	    //thread::sleep(time::Duration::from_millis(100));
         }
         println!("{}", now.elapsed().as_secs_f32());
 

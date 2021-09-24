@@ -20,7 +20,9 @@ spec:
           #image: tomtor/postgis:postgis302_pg13.1
           #image: tomtor/postgis:postgis-4p2tom_pg13.1
           #image: tomtor/postgis:postgis31rc1pg13.1
-          image: tomtor/postgis:postgis310pg13.1
+          #image: tomtor/postgis:postgis310pg13.1
+          #image: tomtor/postgis:postgis310pg13.4
+          image: tomtor/postgis:postgis320pg14rc1
           #image: postgres:latest
           imagePullPolicy: "IfNotPresent"
           ports:
@@ -45,8 +47,9 @@ spec:
         - name: dshm
           emptyDir:
             medium: Memory
-            sizeLimit: 512Mi
+            sizeLimit: 1024Mi
         - name: postgredb
           persistentVolumeClaim:
             #claimName: postgres12-pv-claim
-            claimName: postgres13-pv-claim
+            #claimName: postgres13-pv-claim
+            claimName: postgres-pv-claim

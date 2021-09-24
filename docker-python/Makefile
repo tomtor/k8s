@@ -1,4 +1,4 @@
-VERSION=0.31
+VERSION=0.32
 
 pull:
 	cd archi_test; git pull

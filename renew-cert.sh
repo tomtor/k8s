@@ -2,9 +2,8 @@
 
 HOSTNAME=tom-kad-k8s.westeurope.cloudapp.azure.com
 
-#PGDIR=/data/pg11/pg11.2
-#PGDIR=/data/pg/pg12.0beta
-PGDIR=/data/pg/pg12
+#PGDIR=/data/pg/pg13
+PGDIR=/data/pg/pg
 PGOWNER=70
 
 PATH=/snap/bin:$PATH

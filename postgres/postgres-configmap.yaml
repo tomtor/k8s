@@ -7,5 +7,5 @@ metadata:
 data:
   POSTGRES_DB: postgresdb
   POSTGRES_USER: postgresadmin
-  POSTGRES_PASSWORD: admin123
+  POSTGRES_PASSWORD: wasadmin123
 

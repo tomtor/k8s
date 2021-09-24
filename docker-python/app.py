@@ -20,7 +20,7 @@ def db_connect():
         except:
           pass
     print("Connecting", file=sys.stderr)
-    threaded_postgreSQL_pool = psycopg2.pool.ThreadedConnectionPool(5, 20,
+    threaded_postgreSQL_pool = psycopg2.pool.ThreadedConnectionPool(2, 20,
                                   user="tom",
                                   password=os.getenv("PGPASS"),
                                   host=os.getenv("PGHOST", "localhost"),

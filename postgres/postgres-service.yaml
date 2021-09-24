@@ -11,3 +11,17 @@ spec:
      nodePort: 30779
   selector:
    app: postgres
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres13
+  labels:
+    app: postgres13
+spec:
+  type: NodePort
+  ports:
+   - port: 5432
+     nodePort: 30778
+  selector:
+   app: postgres13
