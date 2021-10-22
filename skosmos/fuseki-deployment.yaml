@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: fuseki
+  name: fuseki
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: fuseki
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: fuseki
+    spec:
+      containers:
+      - env:
+        - name: ADMIN_PASSWORD
+          value: "PW Here"
+        - name: JVM_ARGS
+          value: -Xmx2g
+        image: stain/jena-fuseki
+        imagePullPolicy: ""
+        name: skosmos-fuseki
+        ports:
+        - containerPort: 3030
+        resources: {}
+        volumeMounts:
+        - mountPath: /fuseki/configuration/skosmos.ttl
+          name: fuseki-claim0
+      hostname: fuseki
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes:
+      - name: fuseki-claim0
+        persistentVolumeClaim:
+          claimName: fuseki-claim0
+status: {}

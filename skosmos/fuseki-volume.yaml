@@ -1,0 +1,15 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: fuseki-volume
+  labels:
+    type: local
+    io.kompose.service: fuseki
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/home/tom/src/Skosmos/dockerfiles/config/skosmos.ttl"

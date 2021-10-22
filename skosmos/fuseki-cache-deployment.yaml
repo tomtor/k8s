@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: fuseki-cache
+  name: fuseki-cache
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: fuseki-cache
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: fuseki-cache
+    spec:
+      containers:
+      - image: varnish
+        imagePullPolicy: ""
+        name: skosmos-fuseki-cache
+        ports:
+        - containerPort: 80
+        resources: {}
+        volumeMounts:
+        - mountPath: /etc/varnish/default.vcl
+          name: fuseki-cache-claim0
+      hostname: fuseki-cache
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes:
+      - name: fuseki-cache-claim0
+        persistentVolumeClaim:
+          claimName: fuseki-cache-claim0
+status: {}

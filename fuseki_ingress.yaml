@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   annotations:
      nginx.ingress.kubernetes.io/proxy-body-size: "0"
-  name: skosmos-ingress
+  name: fuseki-ingress
 spec:
    tls:
    - hosts:
