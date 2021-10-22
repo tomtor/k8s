@@ -23,6 +23,6 @@ spec:
          path: /
          backend:
            service:
-             name: 10.0.1.5
+             name: skosmos
              port:
                number: 9090

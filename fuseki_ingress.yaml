@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+     nginx.ingress.kubernetes.io/proxy-body-size: "0"
+  name: skosmos-ingress
+spec:
+   tls:
+   - hosts:
+     - fuseki.v7f.eu
+     secretName: testsecret-tls
+   rules:
+   - host: fuseki.v7f.eu
+     http:
+       paths:
+       - pathType: Prefix
+         path: /
+         backend:
+           service:
+             name: fuseki
+             port:
+               number: 9030
