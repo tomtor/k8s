@@ -4,7 +4,7 @@ metadata:
   name: fuseki-volume
   labels:
     type: local
-    io.kompose.service: fuseki
+    # io.kompose.service: fuseki
 spec:
   storageClassName: manual
   capacity:

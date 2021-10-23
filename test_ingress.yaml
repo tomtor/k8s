@@ -11,7 +11,6 @@ spec:
      - tom-kad-k8s.westeurope.cloudapp.azure.com
      - k8s.v7f.eu
      - pgadmin.v7f.eu
-     - geoserver.v7f.eu
      secretName: testsecret-tls
    rules:
    - host: k8s.v7f.eu
@@ -34,13 +33,3 @@ spec:
              name: pgadmin4
              port:
                number: 80
-   - host: geoserver.v7f.eu
-     http:
-       paths:
-       - pathType: Prefix
-         path: /
-         backend:
-           service:
-             name: geoserver
-             port:
-               number: 8080

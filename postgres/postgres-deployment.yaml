@@ -22,7 +22,7 @@ spec:
           #image: tomtor/postgis:postgis31rc1pg13.1
           #image: tomtor/postgis:postgis310pg13.1
           #image: tomtor/postgis:postgis310pg13.4
-          image: tomtor/postgis:postgis320pg14rc1
+          image: tomtor/postgis:postgis320pg14
           #image: postgres:latest
           imagePullPolicy: "IfNotPresent"
           ports:

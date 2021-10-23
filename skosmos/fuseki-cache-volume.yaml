@@ -4,7 +4,7 @@ metadata:
   name: fuseki-cache-volume
   labels:
     type: local
-    io.kompose.service: fuseki-cache
+    # io.kompose.service: fuseki-cache
 spec:
   storageClassName: manual
   capacity:
@@ -12,4 +12,5 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/home/tom/src/Skosmos/dockerfiles/config/varnish-default.vcl"
+    #path: "/home/tom/src/Skosmos/dockerfiles/config/varnish-default.vcl"
+    path: "/home/tom/src/Skosmos/dockerfiles/config/varnish-k8s.vcl"

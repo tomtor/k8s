@@ -27,7 +27,7 @@ spec:
       containers:
       - env:
         - name: ADMIN_PASSWORD
-          value: "PW Here"
+          value: "AdminTryMe!!!"
         - name: JVM_ARGS
           value: -Xmx2g
         image: stain/jena-fuseki
