@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+     nginx.ingress.kubernetes.io/proxy-body-size: "0"
+     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+  name: egeria-pres
+spec:
+   tls:
+   - hosts:
+     - lab-pres.v7f.eu
+     secretName: testsecret-tls
+   rules:
+   - host: lab-pres.v7f.eu
+     http:
+       paths:
+       - pathType: Prefix
+         path: /
+         backend:
+           service:
+             name: lab-presentation
+             port:
+               number: 8091
