@@ -120,3 +120,16 @@
     void:sparqlEndpoint <http://fuseki-cache:9031/skosmos/sparql> ;
     skosmos:sparqlGraph <http://v7f.eu/nen3610/> .
 
+:kadzv a skosmos:Vocabulary, void:Dataset ;
+    dc:title "Kadaster Zorgeloos Vastgoed Thesaurus"@nl ;
+    skosmos:shortName "KADZV";
+    dc:subject :cat_general ;
+    void:uriSpace "http://zorgeloosvastgoed.nl/kad/";
+    skosmos:language "nl";
+    skosmos:defaultLanguage "nl";
+    skosmos:showTopConcepts true ;
+    skosmos:fullAlphabeticalIndex true ;
+    skosmos:groupClass isothes:ConceptGroup ;
+    void:sparqlEndpoint <http://fuseki-cache:9031/skosmos/sparql> ;
+    skosmos:sparqlGraph <http://zorgeloosvastgoed.nl/kad/> .
+
