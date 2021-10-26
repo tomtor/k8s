@@ -18,7 +18,7 @@
 :config a skosmos:Configuration ;
     # SPARQL endpoint
     # a local Fuseki server is usually on localhost:3030
-    skosmos:sparqlEndpoint <http://fuseki-cache:80/skosmos/sparql> ;
+    skosmos:sparqlEndpoint <http://fuseki-cache:9031/skosmos/sparql> ;
     # sparql-query extension, or "Generic" for plain SPARQL 1.1
     # set to "JenaText" instead if you use Fuseki with jena-text index
     skosmos:sparqlDialect "JenaText" ;
@@ -94,7 +94,7 @@
     skosmos:showTopConcepts true ;
     skosmos:fullAlphabeticalIndex true ;
     skosmos:groupClass isothes:ConceptGroup ;
-    void:sparqlEndpoint <http://fuseki-cache:80/skosmos/sparql> ;
+    void:sparqlEndpoint <http://fuseki-cache:9031/skosmos/sparql> ;
     skosmos:sparqlGraph <http://skos.um.es/unescothes/> .
 
 :stw a skosmos:Vocabulary, void:Dataset ;
@@ -104,5 +104,19 @@
     void:uriSpace "http://zbw.eu/stw/";
     skosmos:language "en", "de";
     skosmos:defaultLanguage "de";
-    void:sparqlEndpoint <http://fuseki-cache:80/skosmos/sparql> ;
+    void:sparqlEndpoint <http://fuseki-cache:9031/skosmos/sparql> ;
     skosmos:sparqlGraph <http://zbw.eu/stw/> .
+
+:nen3610 a skosmos:Vocabulary, void:Dataset ;
+    dc:title "NEN3610 Thesaurus"@en ;
+    skosmos:shortName "NEN3610";
+    dc:subject :cat_general ;
+    void:uriSpace "http://v7f.eu/nen3610/";
+    skosmos:language "nl";
+    skosmos:defaultLanguage "nl";
+    skosmos:showTopConcepts true ;
+    skosmos:fullAlphabeticalIndex true ;
+    skosmos:groupClass isothes:ConceptGroup ;
+    void:sparqlEndpoint <http://fuseki-cache:9031/skosmos/sparql> ;
+    skosmos:sparqlGraph <http://v7f.eu/nen3610/> .
+

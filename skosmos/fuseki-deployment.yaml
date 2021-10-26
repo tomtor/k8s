@@ -25,17 +25,15 @@ spec:
         io.kompose.service: fuseki
     spec:
       containers:
-      - env:
-        - name: ADMIN_PASSWORD
-          value: "a password"
-        - name: JVM_ARGS
-          value: -Xmx2g
-        image: stain/jena-fuseki
+      - image: stain/jena-fuseki
         imagePullPolicy: ""
         name: skosmos-fuseki
         ports:
         - containerPort: 3030
         resources: {}
+        envFrom:
+          - configMapRef:
+              name: fuseki-config
         volumeMounts:
         - mountPath: /fuseki/configuration/skosmos.ttl
           name: fuseki-claim0

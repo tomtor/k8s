@@ -12,5 +12,4 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    #path: "/home/tom/src/Skosmos/dockerfiles/config/config-docker-compose.ttl"
-    path: "/home/tom/src/Skosmos/dockerfiles/config/config-k8s.ttl"
+    path: "/home/tom/src/k8s/skosmos/config/config-k8s.ttl"
