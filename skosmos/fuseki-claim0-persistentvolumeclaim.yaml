@@ -14,3 +14,20 @@ spec:
       storage: 100Mi
   volumeName: fuseki-volume
 status: {}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: fuseki-data-claim
+  name: fuseki-data-claim
+spec:
+  storageClassName: manual
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+  volumeName: fuseki-data
+status: {}

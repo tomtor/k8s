@@ -13,3 +13,18 @@ spec:
     - ReadWriteOnce
   hostPath:
     path: "/home/tom/src/Skosmos/dockerfiles/config/skosmos.ttl"
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: fuseki-data
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/data/fuseki"

@@ -49,7 +49,7 @@ spec:
           #image: dpage/pgadmin4:4.4
           #image: dpage/pgadmin4:4.19
           #image: dpage/pgadmin4:4.26
-          image: dpage/pgadmin4:6.0
+          image: dpage/pgadmin4:6.1
           imagePullPolicy: "IfNotPresent"
           ports:
             - containerPort: 80

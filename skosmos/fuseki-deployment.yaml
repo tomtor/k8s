@@ -37,6 +37,8 @@ spec:
         volumeMounts:
         - mountPath: /fuseki/configuration/skosmos.ttl
           name: fuseki-claim0
+        - mountPath: /fuseki/databases
+          name: fuseki-data-claim
       hostname: fuseki
       restartPolicy: Always
       serviceAccountName: ""
@@ -44,4 +46,7 @@ spec:
       - name: fuseki-claim0
         persistentVolumeClaim:
           claimName: fuseki-claim0
+      - name: fuseki-data-claim
+        persistentVolumeClaim:
+          claimName: fuseki-data-claim
 status: {}
