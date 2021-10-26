@@ -1,0 +1,73 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: vocbench-data
+  labels:
+    type: local
+    app: vocbench
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/data/vocbench"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: vocbench-data-claim
+  labels:
+    app: vocbench
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vocbench
+  labels:
+    app: vocbench
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vocbench
+  template:
+    metadata:
+      labels:
+        app: vocbench
+    spec:
+      containers:
+        - name: vocbench
+          image: vocbench3:10.1.0
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 1979
+          volumeMounts:
+            - mountPath: /opt/vocbench3/data
+              name: vocbench-data
+      volumes:
+        - name: vocbench-data
+          persistentVolumeClaim:
+            claimName: vocbench-data-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vocbench
+  labels:
+    app: vocbench
+spec:
+  type: NodePort
+  ports:
+   - port: 1979
+     targetPort: 1979
+  selector:
+   app: vocbench
