@@ -3,9 +3,14 @@ kind: Ingress
 metadata:
   annotations:
      nginx.ingress.kubernetes.io/proxy-body-size: "0"
-     nginx.ingress.kubernetes.io/whitelist-source-range:
-       #10.0.0.0/8,172.16.0.0/12,127.0.0.1/32,80.100.161.180/32,::1/128
-       10.152.183.0/24,172.16.0.0/12,80.100.161.180/32,13.95.28.63/32
+     #nginx.ingress.kubernetes.io/whitelist-source-range:
+       #10.152.183.0/24,172.16.0.0/12,80.100.161.180/32,13.95.28.63/32
+     # type of authentication
+     nginx.ingress.kubernetes.io/auth-type: basic
+     # name of the secret that contains the user/password definitions
+     nginx.ingress.kubernetes.io/auth-secret: basic-auth
+     # message to display with an appropriate context why the authentication is required
+     nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
   name: fuseki-ingress
 spec:
    tls:
