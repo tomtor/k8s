@@ -15,10 +15,12 @@ GRAPH=http://opendata.stelselcatalogus.nl/stelsel/
 
 curl -X DELETE $HTTP://$DEST:$PORT/skosmos/data --data-urlencode graph=$GRAPH
 
-#rm -f stelselcatalogus.ttl
-#wget https://www.stelselcatalogus.nl/downloads/stelselcatalogus.ttl
+rm -f stelselcatalogus.ttl
+wget https://www.stelselcatalogus.nl/downloads/stelselcatalogus.ttl
+sed 's/a sc:Begrip/&, skos:Concept/' < stelselcatalogus.ttl > sc-in.ttl
+skosify sc-in.ttl -o sc.ttl
 
-curl -I -X POST -H Content-Type:text/turtle -T stelselcatalogus.ttl -G $HTTP://$DEST:$PORT/skosmos/data --data-urlencode graph=$GRAPH
+curl -I -X POST -H Content-Type:text/turtle -T sc.ttl -G $HTTP://$DEST:$PORT/skosmos/data --data-urlencode graph=$GRAPH
 
 exit 0
 
