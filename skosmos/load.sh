@@ -9,9 +9,21 @@ HTTP=http
 HTTP=https
 
 # load STW vocabulary data
-curl --user tom:$FKPW -I -X POST -H Content-Type:text/turtle -T stw.ttl -G $HTTP://$DEST:$PORT/skosmos/data --data-urlencode graph=http://zbw.eu/stw/
+#curl --user tom:$FKPW -I -X POST -H Content-Type:text/turtle -T stw.ttl -G $HTTP://$DEST:$PORT/skosmos/data --data-urlencode graph=http://zbw.eu/stw/
+
+GRAPH=http://opendata.stelselcatalogus.nl/stelsel/
+
+curl -X DELETE $HTTP://$DEST:$PORT/skosmos/data --data-urlencode graph=$GRAPH
+
+#rm -f stelselcatalogus.ttl
+#wget https://www.stelselcatalogus.nl/downloads/stelselcatalogus.ttl
+
+curl -I -X POST -H Content-Type:text/turtle -T stelselcatalogus.ttl -G $HTTP://$DEST:$PORT/skosmos/data --data-urlencode graph=$GRAPH
 
 exit 0
+
+rm -f kad.ttl
+wget https://github.com/bp4mc2/bp4mc2-zvg/raw/master/taxonomie%C3%ABn/kad.ttl
 
 curl -I -X POST -H Content-Type:text/turtle -T kad.ttl -G $HTTP://$DEST:$PORT/skosmos/data --data-urlencode graph=http://zorgeloosvastgoed.nl/kad/
 
