@@ -1,0 +1,12 @@
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+
+SELECT ?obj
+WHERE{
+    ?subj geo:sfContains ?obj
+} ORDER by ?obj
+
+#SELECT ?obj ?pred ?sub
+#WHERE { 
+    #?obj geo:asWKT ?sub . 
+#}
