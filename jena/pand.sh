@@ -4,7 +4,7 @@ export PGPORT=30779
 export BASE_DIR=$(pwd)/apache-sis-1.1
 export SIS_DATA=$BASE_DIR/data
 
-echo 'select gml_id, st_astext(st_transform(ST_GeometryN(pand.wkb_geometry,1),4326)) from pand where st_intersects(st_transform(pand.wkb_geometry,4326), ST_MakeEnvelope(5, 52, 5.1, 52.1, 4326))' | psql -A -t bgt | awk -F\| '
+echo 'select gml_id, st_astext(st_transform(geometry,4326)), area from pand10' | psql -A -t bgt | awk -F\| '
 BEGIN {
   print "<http://pand/asWKT> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#DatatypeProperty> ."
   print "<http://pand/asWKT> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.opengis.net/ont/geosparql#asWKT> ."
@@ -17,6 +17,7 @@ BEGIN {
   #print "<http://bgt/pand/geometry/" $1 ">" " " "<http://pand/asWKT>" " " "\"<http://www.opengis.net/def/crs/EPSG/0/4326> " $2 "\"^^<http://www.opengis.net/ont/geosparql#wktLiteral> ."
   #print "<http://bgt/pand/geometry/" $1 ">" " " "<http://pand/hasserial>" " " "\"<http://www.opengis.net/def/crs/EPSG/0/4326> " $2 "\"^^<http://www.opengis.net/ont/geosparql#wktLiteral> ."
   print "<http://bgt/pand/geometry/" $1 ">" " " "<http://www.opengis.net/ont/geosparql#hasSerialization>" " " "\"<http://www.opengis.net/def/crs/EPSG/0/4326> " $2 "\"^^<http://www.opengis.net/ont/geosparql#wktLiteral> ."
+  print "<http://bgt/pand/geometry/" $1 "> <http://pand/area> \"" $3 "\"^^<http://www.w3.org/2001/XMLSchema#float> ."
   #print "<http://bgt/pand/" $1 ">" " " "<http://pand/hasGeometry> <http://bgt/pand/geometry/" $1 "> ."
   print "<http://bgt/pand/" $1 ">" " " "<http://www.opengis.net/ont/geosparql#hasGeometry> <http://bgt/pand/geometry/" $1 "> ."
 }

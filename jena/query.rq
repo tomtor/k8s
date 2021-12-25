@@ -1,12 +1,14 @@
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX spatialF: <http://jena.apache.org/spatial#>
 
-SELECT ?obj
-WHERE{
-    ?subj geo:sfContains ?obj
-} ORDER by ?obj
-
-#SELECT ?obj ?pred ?sub
-#WHERE { 
-    #?obj geo:asWKT ?sub . 
-#}
+SELECT * # ?s2 ?s1
+WHERE { 
+	?s1  <http://www.opengis.net/ont/geosparql#hasSerialization> ?o1 .
+	?s2  <http://www.opengis.net/ont/geosparql#hasSerialization> ?o2 .
+	?s2  <http://pand/area> ?o3 .
+	FILTER(geof:sfWithin(?o2, ?o1)) .  
+	FILTER(?o3 > 10000) .  
+	#FILTER(geof:distance(?o2, ?o1, <http://qudt.org/vocab/unit#meter>) < 10) .  
+} 
