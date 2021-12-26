@@ -2,13 +2,22 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX spatialF: <http://jena.apache.org/spatial#>
+PREFIX units: <http://www.opengis.net/def/uom/OGC/1.0/>
 
-SELECT * # ?s2 ?s1
+SELECT * # ?s2 # ?s2 ?s1
+#SELECT ?o3 (geof:distance(?o2, ?o1, units:meter) as ?dist)
+#SELECT (geof:distance(?o2, ?o1, units:meter) as ?dist)
 WHERE { 
-	?s1  <http://www.opengis.net/ont/geosparql#hasSerialization> ?o1 .
 	?s2  <http://www.opengis.net/ont/geosparql#hasSerialization> ?o2 .
+	?s1 spatialF:nearbyGeom(?o2 10.0 units:meter) .  
+	#?s1 spatialF:withinCircleGeom(?o2 10.0 units:meter) .  
+	#?s1  <http://www.opengis.net/ont/geosparql#hasSerialization> ?o1 .
 	?s2  <http://pand/area> ?o3 .
-	FILTER(geof:sfWithin(?o2, ?o1)) .  
-	FILTER(?o3 > 10000) .  
-	#FILTER(geof:distance(?o2, ?o1, <http://qudt.org/vocab/unit#meter>) < 10) .  
+	#FILTER(?o3 > 1000) .  
+	#FILTER(geof:sfWithin(?o2, ?o1)) .  
+	FILTER(
+		?s1 != ?s2
+		&& ?o3 > 1000
+		#&& geof:distance(?o2, ?o1, units:meter) < 10.0
+	) .  
 } 

@@ -4,7 +4,7 @@ export PGPORT=30779
 export BASE_DIR=$(pwd)/apache-sis-1.1
 export SIS_DATA=$BASE_DIR/data
 
-echo 'select gml_id, st_astext(st_transform(geometry,4326)), area from pand10' | psql -A -t bgt | awk -F\| '
+echo 'select gml_id, st_astext(geometry), area from pand10' | psql -A -t bgt | awk -F\| '
 BEGIN {
   print "<http://pand/asWKT> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#DatatypeProperty> ."
   print "<http://pand/asWKT> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.opengis.net/ont/geosparql#asWKT> ."
