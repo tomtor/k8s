@@ -9,7 +9,7 @@ SELECT * # ?s2 # ?s2 ?s1
 #SELECT (geof:distance(?o2, ?o1, units:meter) as ?dist)
 WHERE { 
 	?s2  <http://www.opengis.net/ont/geosparql#hasSerialization> ?o2 .
-	?s1 spatialF:nearbyGeom(?o2 10.0 units:meter) .  
+	?s1 spatialF:nearbyGeom(?o2 10 units:meter) .  
 	#?s1  <http://www.opengis.net/ont/geosparql#hasSerialization> ?o1 .
 	?s2  <http://pand/area> ?o3 .
 	#FILTER(?o3 > 1000) .  
