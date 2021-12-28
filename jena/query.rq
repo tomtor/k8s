@@ -8,15 +8,15 @@ SELECT * # ?s2 # ?s2 ?s1
 #SELECT ?o3 (geof:distance(?o2, ?o1, units:meter) as ?dist)
 #SELECT (geof:distance(?o2, ?o1, units:meter) as ?dist)
 WHERE { 
+	?s2  <http://pand/area> ?o3 .
+	FILTER(?o3 > 1000) .  
 	?s2  <http://www.opengis.net/ont/geosparql#hasSerialization> ?o2 .
 	?s1 spatialF:nearbyGeom(?o2 10 units:meter) .  
 	#?s1  <http://www.opengis.net/ont/geosparql#hasSerialization> ?o1 .
-	?s2  <http://pand/area> ?o3 .
-	#FILTER(?o3 > 1000) .  
 	#FILTER(geof:sfWithin(?o2, ?o1)) .  
 	FILTER(
-		?s1 != ?s2
-		&& ?o3 > 1000
+		#?s1 != ?s2 &&
+		?o3 > 1000
 		#&& geof:distance(?o2, ?o1, units:meter) < 10.0
 	)
 } 
