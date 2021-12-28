@@ -4,19 +4,19 @@ PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
 PREFIX spatialF: <http://jena.apache.org/spatial#>
 PREFIX units: <http://www.opengis.net/def/uom/OGC/1.0/>
 
-SELECT * # ?s2 # ?s2 ?s1
+#SELECT *
+SELECT ?o3
 #SELECT ?o3 (geof:distance(?o2, ?o1, units:meter) as ?dist)
 #SELECT (geof:distance(?o2, ?o1, units:meter) as ?dist)
 WHERE { 
 	?s2  <http://pand/area> ?o3 .
 	FILTER(?o3 > 1000) .  
 	?s2  <http://www.opengis.net/ont/geosparql#hasSerialization> ?o2 .
-	?s1 spatialF:nearbyGeom(?o2 10 units:meter) .  
-	#?s1  <http://www.opengis.net/ont/geosparql#hasSerialization> ?o1 .
-	#FILTER(geof:sfWithin(?o2, ?o1)) .  
+	?p1 spatialF:nearbyGeom(?o2 10 units:meter) .  
+	?p1  <http://www.opengis.net/ont/geosparql#hasGeometry> ?s1 .
+	?s1  <http://www.opengis.net/ont/geosparql#hasSerialization> ?o1 .
 	FILTER(
-		#?s1 != ?s2 &&
-		?o3 > 1000
-		#&& geof:distance(?o2, ?o1, units:meter) < 10.0
+		?s1 != ?s2
+		# && geof:distance(?o2, ?o1, units:meter) < 10.0
 	)
 } 
